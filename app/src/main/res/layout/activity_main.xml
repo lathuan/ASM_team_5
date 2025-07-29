@@ -295,6 +295,35 @@
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
+                <!-- Chức năng 4 copy: Tổng quan Chi tiêu -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardExpenseOverview1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="8dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="4dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:gravity="center">
+                        <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@drawable/overview"
+                            android:layout_marginBottom="8dp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Tổng quan"
+                            android:textAlignment="center"
+                            android:textColor="@android:color/white"/>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
                 <!-- Chức năng 5: Báo cáo -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardReports"

@@ -73,16 +73,16 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
 
-//        // Reset timer khi cuộn trong NestedScrollView
-//        NestedScrollView nestedScrollView = findViewById(R.id.nestedScrollView);
-//        if (nestedScrollView != null) {
-//            nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-//                @Override
-//                public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-//                    resetInactivityTimeout();
-//                }
-//            });
-//        }
+        // Reset timer khi cuộn trong NestedScrollView
+        NestedScrollView nestedScrollView = findViewById(R.id.nestedScrollView);
+        if (nestedScrollView != null) {
+            nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+                @Override
+                public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                    resetInactivityTimeout();
+                }
+            });
+        }
 
         // Khởi động timer ngay khi vào activity
         resetInactivityTimeout();

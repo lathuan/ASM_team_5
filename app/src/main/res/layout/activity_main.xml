@@ -25,6 +25,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -222,12 +223,13 @@
                     android:layout_margin="8dp"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="4dp">
+
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="102dp"
+                        android:gravity="center"
                         android:orientation="vertical"
-                        android:padding="16dp"
-                        android:gravity="center">
+                        android:padding="16dp">
 
                         <ImageView
                             android:layout_width="48dp"
@@ -235,10 +237,12 @@
                             android:layout_marginBottom="8dp"
                             android:contentDescription="Biểu tượng cài đặt ngân sách"
                             android:src="@drawable/budgetsetting" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Cài đặt ngân sách" android:textAlignment="center"
+                            android:text="Cài đặt ngân sách"
+                            android:textAlignment="center"
                             android:textColor="#333333" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -274,31 +278,33 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardSavingsGoals"
                     android:layout_width="0dp"
-                    android:layout_height="100dp"
+                    android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
-                    android:layout_margin="6dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp">
+                    android:layout_margin="8dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="4dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
+                        android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:padding="12dp">
+                        android:orientation="vertical"
+                        android:padding="16dp">
 
                         <ImageView
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_marginBottom="8dp"
+                            android:contentDescription="Biểu tượng tiết kiệm"
                             android:src="@drawable/darts"
-                            app:tint="#4CAF50"
-                            android:contentDescription="Biểu tượng mục tiêu tiết kiệm"/>
+                            app:tint="#4CAF50" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="tiết kiệm" android:textColor="#333333"
-                            android:textSize="12sp"
-                            android:layout_marginTop="8dp"/>
+                            android:text="Tiết kiệm"
+                            android:textColor="#333333"
+                            android:textSize="14sp" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
@@ -414,7 +420,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ HOME" app:tint="#808080"
+                android:src="@drawable/home" app:tint="#808080"
                 android:contentDescription="Biểu tượng trang chủ" />
             <TextView
                 android:layout_width="wrap_content"

@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Sử dụng CoordinatorLayout làm layout gốc để dễ dàng thêm các thành phần
-     phức tạp như FloatingActionButton hoặc SnackBar sau này. -->
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -21,13 +19,11 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@android:color/transparent"
-            app:titleTextColor="#1A237E" />
+            android:background="@android:color/transparent">
+        </com.google.android.material.appbar.MaterialToolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- NestedScrollView cho phép toàn bộ màn hình có thể cuộn khi nội dung
-         vượt quá kích thước màn hình, đặc biệt hữu ích trên các thiết bị nhỏ. -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -39,32 +35,28 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Header Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginBottom="24dp">
+                android:layout_marginBottom="24dp"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/tvWelcome"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Xin chào,"
-                    android:textSize="16sp"
-                    android:textColor="#6E6E6E"/>
+                    android:text="Chào mừng," android:textColor="#6E6E6E"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/tvUsername"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Nguyễn Văn A"
+                    android:text="Tên Người Dùng" android:textColor="#1A237E"
                     android:textSize="24sp"
-                    android:textColor="#1A237E"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
             </LinearLayout>
 
-            <!-- Financial Overview Card -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -78,32 +70,27 @@
                     android:orientation="vertical"
                     android:padding="24dp"
                     android:background="@drawable/gradient_background">
-
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tổng số dư"
-                        android:textColor="#E0E0E0"
+                        android:text="Số dư tổng cộng" android:textColor="#E0E0E0"
                         android:textSize="14sp"/>
 
                     <TextView
                         android:id="@+id/tvBalance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="2.500.000 ₫"
-                        android:textColor="@android:color/white"
+                        android:text="1.234.567 VND" android:textColor="@android:color/white"
                         android:textSize="32sp"
                         android:textStyle="bold"
                         android:layout_marginTop="8dp"/>
 
-                    <!-- Income vs Expense -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:layout_marginTop="24dp">
 
-                        <!-- Income -->
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -113,28 +100,24 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Thu nhập"
-                                android:textColor="#C8E6C9"
+                                android:text="Thu nhập" android:textColor="#C8E6C9"
                                 android:textSize="12sp"/>
 
                             <TextView
                                 android:id="@+id/tvTotalIncome"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="4.500.000 ₫"
-                                android:textColor="@android:color/white"
+                                android:text="500.000 VND" android:textColor="@android:color/white"
                                 android:textSize="16sp"
                                 android:textStyle="bold"/>
                         </LinearLayout>
 
-                        <!-- Divider -->
                         <View
                             android:layout_width="1dp"
                             android:layout_height="24dp"
                             android:background="#B3E5FC"
                             android:layout_marginHorizontal="8dp"/>
 
-                        <!-- Expense -->
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -144,29 +127,25 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Chi tiêu"
-                                android:textColor="#FFCDD2"
+                                android:text="Chi tiêu" android:textColor="#FFCDD2"
                                 android:textSize="12sp"/>
 
                             <TextView
                                 android:id="@+id/tvTotalExpense"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="2.000.000 ₫"
-                                android:textColor="@android:color/white"
+                                android:text="200.000 VND" android:textColor="@android:color/white"
                                 android:textSize="16sp"
                                 android:textStyle="bold"/>
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>    
+            </androidx.cardview.widget.CardView>
 
-            <!-- Lưới các chức năng -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Các Chức Năng"
-                android:textSize="20sp"
+                android:text="Chức năng" android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#333333"
                 android:layout_marginBottom="16dp"/>
@@ -179,7 +158,6 @@
                 android:alignmentMode="alignMargins"
                 android:columnOrderPreserved="false">
 
-                <!-- Chức năng 1: Theo dõi Chi tiêu -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardExpenseTracking"
                     android:layout_width="0dp"
@@ -198,17 +176,16 @@
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:src="@drawable/expense"
-                            android:layout_marginBottom="8dp"/>
+                            android:layout_marginBottom="8dp"
+                            android:contentDescription="Biểu tượng chi tiêu"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Theo dõi Chi tiêu"
-                            android:textAlignment="center"
-                            android:textColor="@android:color/white"/>
+                            android:text="Theo dõi chi tiêu" android:textAlignment="center"
+                            android:textColor="#333333" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!-- Chức năng 2: Theo dõi Thu nhập -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardIncomeTracking"
                     android:layout_width="0dp"
@@ -227,17 +204,16 @@
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:src="@drawable/tracking"
-                            android:layout_marginBottom="8dp"/>
+                            android:layout_marginBottom="8dp"
+                            android:contentDescription="Biểu tượng theo dõi thu nhập"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Theo dõi Thu nhập"
-                            android:textAlignment="center"
-                            android:textColor="@android:color/white"/>
+                            android:text="Theo dõi thu nhập" android:textAlignment="center"
+                            android:textColor="#333333" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!-- Chức năng 3: Thiết lập Ngân sách -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardBudgetSetting"
                     android:layout_width="0dp"
@@ -252,21 +228,21 @@
                         android:orientation="vertical"
                         android:padding="16dp"
                         android:gravity="center">
+
                         <ImageView
                             android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:src="@drawable/budgetsetting"
-                            android:layout_marginBottom="8dp"/>
+                            android:layout_height="43dp"
+                            android:layout_marginBottom="8dp"
+                            android:contentDescription="Biểu tượng cài đặt ngân sách"
+                            android:src="@drawable/budgetsetting" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Thiết lập Ngân sách"
-                            android:textAlignment="center"
-                            android:textColor="@android:color/white"/>
+                            android:text="Cài đặt ngân sách" android:textAlignment="center"
+                            android:textColor="#333333" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!-- Chức năng 4: Tổng quan Chi tiêu -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardExpenseOverview"
                     android:layout_width="0dp"
@@ -285,75 +261,16 @@
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:src="@drawable/overview"
-                            android:layout_marginBottom="8dp"/>
+                            android:layout_marginBottom="8dp"
+                            android:contentDescription="Biểu tượng tổng quan chi tiêu"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Tổng quan"
-                            android:textAlignment="center"
-                            android:textColor="@android:color/white"/>
+                            android:text="Tổng quan chi tiêu" android:textAlignment="center"
+                            android:textColor="#333333" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!-- Chức năng 4 copy: Tổng quan Chi tiêu -->
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cardExpenseOverview1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="8dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="4dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp"
-                        android:gravity="center">
-                        <ImageView
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:src="@drawable/overview"
-                            android:layout_marginBottom="8dp"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Tổng quan"
-                            android:textAlignment="center"
-                            android:textColor="@android:color/white"/>
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <!-- Chức năng 5: Báo cáo -->
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cardReports"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="8dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="4dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp"
-                        android:gravity="center">
-                        <ImageView
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:src="@drawable/report"
-                            android:layout_marginBottom="8dp"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Báo cáo"
-                            android:textAlignment="center"
-                            android:textColor="@android:color/white"/>
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <!-- Savings Goals - NEW FEATURE -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardSavingsGoals"
                     android:layout_width="0dp"
@@ -361,9 +278,7 @@
                     android:layout_columnWeight="1"
                     android:layout_margin="6dp"
                     app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    app:strokeColor="#E0E0E0"
-                    app:strokeWidth="1dp">
+                    app:cardElevation="2dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -376,19 +291,43 @@
                             android:layout_width="32dp"
                             android:layout_height="32dp"
                             android:src="@drawable/darts"
-                            app:tint="#4CAF50"/>
-
+                            app:tint="#4CAF50"
+                            android:contentDescription="Biểu tượng mục tiêu tiết kiệm"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Tiết kiệm"
-                            android:textColor="#333333"
+                            android:text="tiết kiệm" android:textColor="#333333"
                             android:textSize="12sp"
                             android:layout_marginTop="8dp"/>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!-- Statistics -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardGoals"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="8dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="4dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:gravity="center">
+                        <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@drawable/darts" android:layout_marginBottom="8dp"
+                            android:contentDescription="Biểu tượng mục tiêu"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Mục tiêu" android:textAlignment="center"
+                            android:textColor="#333333" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardStatistics"
                     android:layout_width="0dp"
@@ -396,9 +335,7 @@
                     android:layout_columnWeight="1"
                     android:layout_margin="6dp"
                     app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    app:strokeColor="#E0E0E0"
-                    app:strokeWidth="1dp">
+                    app:cardElevation="2dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -410,20 +347,18 @@
                         <ImageView
                             android:layout_width="32dp"
                             android:layout_height="32dp"
-                            android:src="@drawable/darts"
-                            app:tint="#4CAF50"/>
-
+                            android:src="@drawable/expense"
+                            app:tint="#4CAF50"
+                            android:contentDescription="Biểu tượng thống kê"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Tiết kiệm"
-                            android:textColor="#333333"
+                            android:text="Thống kê" android:textColor="#333333"
                             android:textSize="12sp"
                             android:layout_marginTop="8dp"/>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!-- Chức năng 6: Thông báo -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardNotifications"
                     android:layout_width="0dp"
@@ -441,33 +376,101 @@
                         <ImageView
                             android:layout_width="48dp"
                             android:layout_height="48dp"
-                            android:src="@drawable/notification"
-                            android:layout_marginBottom="8dp"/>
+                            android:layout_marginBottom="8dp"
+                            android:contentDescription="Biểu tượng thông báo"
+                            android:src="@drawable/notification"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Thông báo"
-                            android:textAlignment="center"
-                            android:textColor="@android:color/white"/>
+                            android:text="Thông báo" android:textAlignment="center"
+                            android:textColor="#333333" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
-
-
-
             </GridLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Nút hành động nổi để Thêm chi tiêu nhanh -->
+    <LinearLayout
+        android:id="@+id/bottomNavBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#FFFFFF"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:weightSum="3"
+        android:gravity="center_vertical"
+        android:layout_gravity="bottom">
+
+        <LinearLayout
+            android:id="@+id/nav_home" android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ HOME" app:tint="#808080"
+                android:contentDescription="Biểu tượng trang chủ" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Trang Chủ" android:textColor="#808080"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <Space
+            android:id="@+id/fab_spacer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:id="@+id/nav_toi"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground">
+
+            <ImageView
+                android:layout_width="29dp"
+                android:layout_height="21dp"
+                android:contentDescription="Biểu tượng hồ sơ"
+                android:src="@drawable/avatar" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="tôi"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAddExpense"
+        android:id="@+id/fab_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="24dp"
+        android:layout_row="0"
+        android:layout_column="0"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:contentDescription="Thêm mới"
+        android:focusable="true"
         android:src="@drawable/add"
-        app:backgroundTint="#1A237E"
-        app:tint="@android:color/white"
-        android:contentDescription="Thêm chi tiêu mới"/>
+        app:backgroundTint="#FFC107"
+        app:elevation="6dp"
+        app:layout_anchor="@id/bottomNavBar"
+        app:layout_anchorGravity="center_horizontal|top"
+        app:pressedTranslationZ="12dp"
+        app:tint="@android:color/white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

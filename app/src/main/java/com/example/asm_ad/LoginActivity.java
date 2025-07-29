@@ -35,10 +35,10 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             SQLiteDatabase db = dbHelper.getReadableDatabase();
-            String[] columns = {DatabaseHelper.COLUMN_ID};
-            String selection = DatabaseHelper.COLUMN_USERNAME + " = ? AND " + DatabaseHelper.COLUMN_PASSWORD + " = ?";
+            String[] columns = {DatabaseHelper.COLUMN_USER_ID};
+            String selection = DatabaseHelper.COLUMN_USER_USERNAME + " = ? AND " + DatabaseHelper.COLUMN_USER_PASSWORD + " = ?";
             String[] selectionArgs = {username, password};
-            Cursor cursor = db.query(DatabaseHelper.TABLE_USERS, columns, selection, selectionArgs, null, null, null);
+            Cursor cursor = db.query(DatabaseHelper.TABLE_USER, columns, selection, selectionArgs, null, null, null);
 
             if (cursor.moveToFirst()) {
                 Toast.makeText(this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();

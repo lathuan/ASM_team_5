@@ -21,16 +21,5 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         String username = prefs.getString("username", "User");
         tvWelcome.setText("Chào mừng, " + username + "!");
-
-        Button btnLogout = findViewById(R.id.btnLogout);
-        btnLogout.setOnClickListener(v -> {
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putBoolean(KEY_IS_LOGGED_IN, false);
-            editor.apply();
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
-        });
     }
 }

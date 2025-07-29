@@ -66,13 +66,13 @@ public class RegisterActivity extends AppCompatActivity {
 
             SQLiteDatabase db = dbHelper.getWritableDatabase();
             ContentValues values = new ContentValues();
-            values.put(DatabaseHelper.COLUMN_USERNAME, username);
-            values.put(DatabaseHelper.COLUMN_PASSWORD, password);
-            values.put(DatabaseHelper.COLUMN_FULLNAME, fullName);
-            values.put(DatabaseHelper.COLUMN_EMAIL, email);
-            values.put(DatabaseHelper.COLUMN_PHONE, phone);
-
-            long newRowId = db.insert(DatabaseHelper.TABLE_USERS, null, values);
+            values.put(DatabaseHelper.COLUMN_USER_USERNAME, username);
+            values.put(DatabaseHelper.COLUMN_USER_PASSWORD, password);
+            values.put(DatabaseHelper.COLUMN_USER_FULLNAME, fullName);
+            values.put(DatabaseHelper.COLUMN_USER_EMAIL, email);
+            values.put(DatabaseHelper.COLUMN_USER_PHONE, phone);
+            values.put(DatabaseHelper.COLUMN_USER_ROLE_ID, 1);
+            long newRowId = db.insert(DatabaseHelper.TABLE_USER, null, values);
             if (newRowId != -1) {
                 Toast.makeText(this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);

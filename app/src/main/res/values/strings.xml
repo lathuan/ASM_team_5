@@ -1,37 +1,5 @@
 <resources>
-    <string name="nav_home_label">Trang chủ</string>
-    <string name="icon_description_home">Icon Trang chủ</string>
-
-    <string name="nav_goals_label">Mục Tiêu</string>
-    <string name="icon_description_goals">Icon Mục tiêu</string>
-
-    <string name="nav_profile_label">Hồ sơ</string>
-    <string name="icon_description_profile">Icon Hồ sơ người dùng</string>
-
-    <string name="func_reports">Báo cáo</string>
-    <string name="func_savings_goals">Tiết kiệm</string>
-
-    <string name="welcome_greeting">Xin chào,</string>
-    <string name="username_placeholder">Nguyễn Văn A</string>
-    <string name="total_balance_label">Tổng số dư</string>
-    <string name="balance_placeholder">2.500.000 ₫</string>
-    <string name="income_label">Thu nhập</string>
-    <string name="income_placeholder">4.500.000 ₫</string>
-    <string name="expense_label">Chi tiêu</string>
-    <string name="expense_placeholder">2.000.000 ₫</string>
-    <string name="functions_title">Các Chức Năng</string>
-    <string name="func_expense_tracking">Theo dõi Chi tiêu</string>
-    <string name="func_income_tracking">Theo dõi Thu nhập</string>
-    <string name="func_budget_setting">Thiết lập Ngân sách</string>
-    <string name="func_expense_overview">Tổng quan</string>
-    <string name="func_notifications">Thông báo</string>
-    <string name="fab_add_content_description">Nút thêm mới</string>
-    <string name="icon_description_report">Icon báo cáo</string>
-    <string name="icon_description_expense">Icon theo dõi chi tiêu</string>
-    <string name="icon_description_income">Icon theo dõi thu nhập</string>
-    <string name="icon_description_budget">Icon thiết lập ngân sách</string>
-    <string name="icon_description_overview">Icon tổng quan</string>
-    <string name="icon_description_savings">Icon mục tiêu tiết kiệm</string>
-    <string name="icon_description_notification">Icon thông báo</string>
-    <string name="avatar_content_description">Ảnh đại diện người dùng</string>
+    <string name="app_name">ASM_AD</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>

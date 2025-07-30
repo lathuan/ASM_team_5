@@ -1,4 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
+    <item
+        android:id="@+id/action_statistical"
+        android:title="Thống kê" />
+    <item
+        android:id="@+id/action_report"
+        android:title="Báo cáo" />
+    <item
+        android:id="@+id/action_overview"
+        android:title="Tổng quan chi tiêu" />
+    <item
+        android:id="@+id/action_tracking"
+        android:title="Theo dõi chi tiêu" />
+    <item
+        android:id="@+id/action_budget_setting"
+        android:title="Cài đặt ngân sách" />
+    <item
+        android:id="@+id/action_save_money"
+        android:title="Tiết kiệm" />
+    <item
+        android:id="@+id/action_salary"
+        android:title="Lương" />
 </menu>

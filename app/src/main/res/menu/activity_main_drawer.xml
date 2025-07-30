@@ -1,4 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
 
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home_drawer"
+            android:icon="@drawable/home"
+            android:title="Trang Chủ" />
+    </group>
+
+    <item android:title="Chức Năng Chính">
+        <menu>
+            <item
+                android:id="@+id/nav_expense_tracking"
+                android:icon="@drawable/expense"
+                android:title="Theo dõi chi tiêu" />
+            <item
+                android:id="@+id/nav_income_tracking"
+                android:icon="@drawable/tracking"
+                android:title="Theo dõi thu nhập" />
+            <item
+                android:id="@+id/nav_budget_setting"
+                android:icon="@drawable/budgetsetting"
+                android:title="Cài đặt ngân sách" />
+            <item
+                android:id="@+id/nav_expense_overview"
+                android:icon="@drawable/overview"
+                android:title="Tổng quan chi tiêu" />
+            <item
+                android:id="@+id/nav_savings_goals"
+                android:icon="@drawable/savemoney"
+                android:title="Tiết kiệm" />
+            <item
+                android:id="@+id/nav_salary"
+                android:icon="@drawable/salary"
+                android:title="Lương" />
+            <item
+                android:id="@+id/nav_statistical"
+                android:icon="@drawable/statistical"
+                android:title="Thống kê" />
+            <item
+                android:id="@+id/nav_report"
+                android:icon="@drawable/report"
+                android:title="Báo cáo" />
+        </menu>
+    </item>
+
+    <item android:title="Thông Tin Khác">
+        <menu>
+            <item
+                android:id="@+id/nav_search_drawer"
+                android:icon="@drawable/search"
+                android:title="Tìm Kiếm" />
+            <item
+                android:id="@+id/nav_notifications_drawer"
+                android:icon="@drawable/notification"
+                android:title="Thông Báo" />
+            <item
+                android:id="@+id/nav_settings_drawer"
+                android:icon="@drawable/budgetsetting"
+                android:title="Cài Đặt" />
+        </menu>
+    </item>
 </menu>

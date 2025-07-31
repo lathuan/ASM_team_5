@@ -80,18 +80,6 @@ public class MainActivity extends AppCompatActivity {
 
         navToi.setOnClickListener(v -> Toast.makeText(MainActivity.this, "Profile clicked", Toast.LENGTH_SHORT).show());
 
-        // Handle Floating Action Button (FAB) Click with Popup Menu
-        FloatingActionButton fabAdd = findViewById(R.id.fab_add);
-        fabAdd.setOnClickListener(v -> {
-            PopupMenu popupMenu = new PopupMenu(MainActivity.this, fabAdd);
-            popupMenu.getMenuInflater().inflate(R.menu.main_popup_menu, popupMenu.getMenu());
-            popupMenu.setOnMenuItemClickListener(item -> {
-                handlePopupMenuItemSelected(item.getItemId());
-                return true;
-            });
-            popupMenu.show();
-        });
-
         // Handle Window Insets
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             androidx.core.graphics.Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -128,25 +116,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         } else if (id == R.id.nav_settings_drawer) {
             Toast.makeText(this, "Settings selected", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    // Handle Popup Menu Item Selection
-    private void handlePopupMenuItemSelected(int id) {
-        if (id == R.id.action_statistical) {
-            Toast.makeText(this, "Statistical selected from FAB", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.action_report) {
-            Toast.makeText(this, "Report selected from FAB", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.action_overview) {
-            Toast.makeText(this, "Expense Overview selected from FAB", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.action_tracking) {
-            Toast.makeText(this, "Expense Tracking selected from FAB", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.action_budget_setting) {
-            Toast.makeText(this, "Budget Setting selected from FAB", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.action_save_money) {
-            Toast.makeText(this, "Save Money selected from FAB", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.action_salary) {
-            Toast.makeText(this, "Salary selected from FAB", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -197,6 +166,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Strings for Drawer Toggle
-    private static final int R_string_navigation_drawer_open = R.string.navigation_drawer_open;
-    private static final int R_string_navigation_drawer_close = R.string.navigation_drawer_close;
+//    private static final int R_string_navigation_drawer_open = R.string.navigation_drawer_open;
+//    private static final int R_string_navigation_drawer_close = R.string.navigation_drawer_close;
 }

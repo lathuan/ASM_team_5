@@ -29,7 +29,7 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
         boolean isLoggedIn = prefs.getBoolean("isLoggedIn", false);
         long lastActiveTime = prefs.getLong("lastActiveTime", 0);
-        long timeout =60 * 1000; // 1 phút
+        long timeout = 60 * 1000; // 1 phút
         long currentTime = System.currentTimeMillis();
 
         if (isLoggedIn && (currentTime - lastActiveTime <= timeout)) {

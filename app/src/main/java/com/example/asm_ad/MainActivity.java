@@ -100,6 +100,43 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
+        boolean isLoggedIn = prefs.getBoolean("isLoggedIn", false);
+        long lastActiveTime = prefs.getLong("lastActiveTime", 0);
+        long timeout = 60 * 1000; // 1 phút
+
+        long currentTime = System.currentTimeMillis();
+        if (!isLoggedIn || (currentTime - lastActiveTime > timeout)) {
+            // session hết hạn -> logout
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.clear();
+            editor.apply();
+
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        } else {
+            // Cập nhật thời gian hoạt động
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putLong("lastActiveTime", currentTime);
+            editor.apply();
+        }
+    }
+
+    @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
+        SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putLong("lastActiveTime", System.currentTimeMillis());
+        editor.apply();
+    }
+
+
     // Handle Navigation Drawer Menu Item Selection
     private void handleNavigationItemSelected(int id) {
         if (id == R.id.nav_home_drawer) {
@@ -150,41 +187,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
-        boolean isLoggedIn = prefs.getBoolean("isLoggedIn", false);
-        long lastActiveTime = prefs.getLong("lastActiveTime", 0);
-        long timeout = 60 * 1000; // 1 phút
-
-        long currentTime = System.currentTimeMillis();
-        if (!isLoggedIn || (currentTime - lastActiveTime > timeout)) {
-            // session hết hạn -> logout
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.clear();
-            editor.apply();
-
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
-        } else {
-            // Cập nhật thời gian hoạt động
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putLong("lastActiveTime", currentTime);
-            editor.apply();
-        }
-    }
-
-    @Override
-    public void onUserInteraction() {
-        super.onUserInteraction();
-        SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putLong("lastActiveTime", System.currentTimeMillis());
-        editor.apply();
-    }
 
     // Handle Back Press to Close Drawer if Open
     @Override

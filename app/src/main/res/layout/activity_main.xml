@@ -31,10 +31,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-
-
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <Space
                         android:layout_width="0dp"
@@ -45,28 +43,43 @@
                         android:id="@+id/icon_search"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:padding="9dp"
                         android:layout_marginEnd="0dp"
-                        android:clickable="true"
-                        android:focusable="true"
                         android:background="?attr/selectableItemBackgroundBorderless"
+                        android:clickable="true"
                         android:contentDescription="Tìm kiếm"
+                        android:focusable="true"
+                        android:padding="9dp"
                         android:src="@drawable/search" />
 
-                    <ImageView
-                        android:id="@+id/icon_notifications"
+                    <FrameLayout
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:padding="9dp"
-                        android:layout_marginEnd="16dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="Thông báo"
-                        android:src="@drawable/notification" />
+                        android:layout_marginEnd="16dp">
+
+                        <ImageView
+                            android:id="@+id/icon_notifications"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:clickable="true"
+                            android:contentDescription="Thông báo"
+                            android:focusable="true"
+                            android:padding="9dp"
+                            android:src="@drawable/notification" />
+
+                        <TextView
+                            android:id="@+id/notification_badge"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="top|end"
+                            android:background="@drawable/badge_background"
+                            android:gravity="center"
+                            android:textColor="@android:color/white"
+                            android:textSize="12sp"
+                            android:visibility="gone" />
+                    </FrameLayout>
                 </LinearLayout>
             </com.google.android.material.appbar.MaterialToolbar>
-
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.core.widget.NestedScrollView
@@ -195,8 +208,6 @@
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-
-
                 <LinearLayout
                     android:id="@+id/chart_container"
                     android:layout_width="match_parent"
@@ -214,7 +225,6 @@
                         android:textColor="#333333"
                         android:layout_marginBottom="16dp"/>
                 </LinearLayout>
-
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
@@ -285,7 +295,6 @@
                     android:text="Hồ Sơ"
                     android:textSize="12sp" />
             </LinearLayout>
-
         </LinearLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -303,7 +312,6 @@
             app:layout_anchorGravity="center"
             app:pressedTranslationZ="12dp"
             app:tint="@android:color/white" />
-
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <com.google.android.material.navigation.NavigationView
@@ -314,5 +322,4 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer" />
-
 </androidx.drawerlayout.widget.DrawerLayout>

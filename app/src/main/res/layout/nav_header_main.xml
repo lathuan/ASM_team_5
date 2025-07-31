@@ -24,7 +24,6 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="@android:color/white"
         android:textStyle="bold" />
-
     <TextView
         android:id="@+id/textViewUserEmail"
         android:layout_width="wrap_content"

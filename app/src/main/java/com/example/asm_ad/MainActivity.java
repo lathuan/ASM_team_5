@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
@@ -27,6 +26,9 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,10 +44,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        // Khởi tạo các view từ activity_main
+        // Khởi tạo các view
         drawerLayout = findViewById(R.id.drawer_layout);
         iconSearch = findViewById(R.id.icon_search);
         iconNotifications = findViewById(R.id.icon_notifications);
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(item -> {
                 int id = item.getItemId();
-                handleNavigationItemSelected(id); // Gọi phương thức xử lý
+                handleNavigationItemSelected(id);
                 return true;
             });
         }
@@ -72,8 +73,7 @@ public class MainActivity extends AppCompatActivity {
             toggle.syncState();
         }
 
-
-        // Xử lý sự kiện nhấn nút Tìm kiếm
+        // Xử lý nút Tìm kiếm
         if (iconSearch != null) {
             iconSearch.setOnClickListener(v -> {
                 if (isUserLoggedIn()) {
@@ -94,9 +94,7 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-
-
-        // Xử lý sự kiện nhấn nút Thông báo
+        // Xử lý nút Thông báo
         if (iconNotifications != null) {
             iconNotifications.setOnClickListener(v -> {
                 if (isUserLoggedIn()) {
@@ -117,12 +115,7 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout navProfile = findViewById(R.id.nav_toi);
 
         navHome.setOnClickListener(v -> showFragment(new HomeFragment()));
-
-        navProfile.setOnClickListener(v -> {
-            // Chuyển đến trang hồ sơ
-            ProfileFragment profileFragment = new ProfileFragment();
-            showFragment(profileFragment);
-        });
+        navProfile.setOnClickListener(v -> showFragment(new ProfileFragment()));
 
         // Xử lý Window Insets
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -131,14 +124,13 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Xử lý nút Thêm mới
+        // Xử lý FAB
         if (fabAdd != null) {
             fabAdd.setOnClickListener(v -> showAddBalanceDialog());
         }
 
-        // Hiển thị Fragment mặc định
+        // Hiển thị fragment mặc định
         showFragment(new HomeFragment());
-
     }
 
     @Override
@@ -178,7 +170,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Thêm các phương thức helper
     private void updateBalance() {
         SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
         String userIdStr = prefs.getString("userId", null);
@@ -191,9 +182,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateTotalExpense() {
-        // Tương tự như trên
+        SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
+        String userIdStr = prefs.getString("userId", null);
+        if (userIdStr != null) {
+            int userId = Integer.parseInt(userIdStr);
+            DatabaseHelper dbHelper = new DatabaseHelper(this);
+            double totalExpense = dbHelper.getUserTotalExpense(userId);
+            if (tvTotalExpense != null) tvTotalExpense.setText(String.format("%,.0f VND", totalExpense));
+        }
     }
-
 
     @Override
     public void onUserInteraction() {
@@ -204,13 +201,11 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
     }
 
-    // Kiểm tra trạng thái đăng nhập
     private boolean isUserLoggedIn() {
         SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
         return prefs.getBoolean("isLoggedIn", false);
     }
 
-    // Chuyển hướng đến LoginActivity
     private void redirectToLogin() {
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -218,19 +213,16 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
-    // Lấy số lượng thông báo chưa đọc
     private int getUnreadNotificationCount() {
         SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
         return prefs.getInt("unreadNotifications", 0);
     }
 
-    // Lấy danh sách thông báo
     private String getNotifications() {
         SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
         return prefs.getString("notifications", "");
     }
 
-    // Cập nhật huy hiệu thông báo
     private void updateNotificationBadge(int count) {
         if (notificationBadge != null) {
             if (count > 0) {
@@ -242,7 +234,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Cập nhật thông tin người dùng trong giao diện
     private void updateUserInfo() {
         SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
         String username = prefs.getString("username", "Tên Người Dùng");
@@ -256,12 +247,8 @@ public class MainActivity extends AppCompatActivity {
             if (textViewUserName != null) textViewUserName.setText(username);
             if (textViewUserEmail != null) textViewUserEmail.setText(email);
         }
-
-//        TextView tvUsername = findViewById(R.id.tvUsername);
-//        if (tvUsername != null) tvUsername.setText(username);
     }
 
-    // Hiển thị dialog để thêm số dư hoặc chi tiêu
     private void showAddBalanceDialog() {
         if (!isUserLoggedIn()) {
             Toast.makeText(this, "Vui lòng đăng nhập để thêm số dư", Toast.LENGTH_SHORT).show();
@@ -272,7 +259,6 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Chọn hành động");
 
-        // Tạo dialog với hai lựa chọn
         final String[] options = {"Thêm số dư", "Thêm chi tiêu"};
         builder.setItems(options, (dialog, which) -> {
             final EditText input = new EditText(this);
@@ -311,6 +297,8 @@ public class MainActivity extends AppCompatActivity {
                                     double newExpense = currentExpense + amount;
                                     dbHelper.updateUserBalance(userId, newBalance);
                                     dbHelper.updateUserExpense(userId, newExpense);
+                                    // Lưu lịch sử chi tiêu vào SharedPreferences
+                                    saveExpenseToHistory(userId, amount, "Chi tiêu từ trang chủ", getCurrentDateTime());
                                     actionMessage = "Đã chi tiêu " + String.format("%,.0f VND", amount);
                                 } else {
                                     Toast.makeText(MainActivity.this, "Số dư không đủ để chi tiêu!", Toast.LENGTH_SHORT).show();
@@ -318,10 +306,8 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             }
 
-                            // Cập nhật giao diện
                             refreshCurrentFragment();
                             addNotification(actionMessage);
-
                             Toast.makeText(MainActivity.this, actionMessage, Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(MainActivity.this, "Số tiền phải lớn hơn 0", Toast.LENGTH_SHORT).show();
@@ -341,16 +327,24 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
-    // Thêm phương thức này để cập nhật Fragment hiện tại
+    private void saveExpenseToHistory(int userId, double amount, String description, String timestamp) {
+        SharedPreferences prefs = getSharedPreferences("ExpenseHistory_" + userId, MODE_PRIVATE);
+        String existingHistory = prefs.getString("expenses", "");
+        String newExpense = String.format("%,.0f VND|%s|%s\n", amount, description, timestamp);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("expenses", newExpense + existingHistory);
+        editor.apply();
+    }
+
     private void refreshCurrentFragment() {
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if (currentFragment instanceof HomeFragment) {
             ((HomeFragment) currentFragment).refreshData();
+        } else if (currentFragment instanceof ExpenseTrackingFragment) {
+            ((ExpenseTrackingFragment) currentFragment).refreshData();
         }
-        // Fragment khác
     }
 
-    // Thêm thông báo về hoạt động
     private void addNotification(String message) {
         SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
         String notificationsStr = prefs.getString("notifications", "");
@@ -363,12 +357,10 @@ public class MainActivity extends AppCompatActivity {
         if (notificationBadge != null) updateNotificationBadge(unreadCount);
     }
 
-    // Lấy ngày giờ hiện tại
     private String getCurrentDateTime() {
-        return "07/31/2025 10:25 PM +07"; // Cập nhật theo thời gian hiện tại
+        return new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date());
     }
 
-    // Xử lý chọn mục trong Navigation Drawer
     private void handleNavigationItemSelected(int id) {
         Fragment fragment = null;
 
@@ -378,9 +370,7 @@ public class MainActivity extends AppCompatActivity {
             fragment = new ExpenseTrackingFragment();
         } else if (id == R.id.nav_income_tracking) {
             fragment = new IncomeTrackingFragment();
-        } else if (id == R.id.nav_budget_setting) {
-            fragment = new BudgetSettingFragment();
-        }  else if (id == R.id.nav_savings_goals) {
+        } else if (id == R.id.nav_savings_goals) {
             fragment = new SavingsGoalsFragment();
         } else if (id == R.id.nav_statistical) {
             fragment = new StatisticalFragment();
@@ -393,7 +383,6 @@ public class MainActivity extends AppCompatActivity {
             if (iconNotifications != null) iconNotifications.performClick();
             return;
         } else if (id == R.id.nav_settings_drawer) {
-            // Xử lý cài đặt
             Toast.makeText(this, "Chức năng cài đặt", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -401,16 +390,12 @@ public class MainActivity extends AppCompatActivity {
         if (fragment != null) {
             showFragment(fragment);
         } else {
-            // Đóng Drawer ngay cả khi không chuyển Fragment
             drawerLayout.closeDrawer(GravityCompat.START, true);
         }
     }
 
     private void showFragment(Fragment fragment) {
-        // Đóng Drawer với hiệu ứng mượt
         drawerLayout.closeDrawer(GravityCompat.START, true);
-
-        // Hiệu ứng chuyển Fragment
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(
                 R.anim.slide_in_right,
@@ -418,13 +403,11 @@ public class MainActivity extends AppCompatActivity {
                 R.anim.slide_in_left,
                 R.anim.slide_out_right
         );
-
         transaction.replace(R.id.fragment_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
 
-    // Xử lý nút Back để đóng Drawer
     @Override
     public void onBackPressed() {
         if (drawerLayout != null && drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -433,6 +416,4 @@ public class MainActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
-    private static final int R_string_navigation_drawer_open = R.string.navigation_drawer_open;
-    private static final int R_string_navigation_drawer_close = R.string.navigation_drawer_close;
 }

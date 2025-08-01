@@ -17,10 +17,6 @@
             android:icon="@drawable/tracking"
             android:title="Theo Dõi Thu Nhập" />
         <item
-            android:id="@+id/nav_budget_setting"
-            android:icon="@drawable/budgetsetting"
-            android:title="Cài Đặt Ngân Sách" />
-        <item
             android:id="@+id/nav_savings_goals"
             android:icon="@drawable/darts"
             android:title="Mục Tiêu Tiết Kiệm" />

@@ -14,7 +14,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Theo dõi thu nhập"
+            android:text="Theo dõi số dư"
             android:textColor="#1A237E"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -37,15 +37,15 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Thu nhập tháng này"
+                    android:text="Số dư hiện tại"
                     android:textColor="#E0E0E0"
                     android:textSize="16sp"/>
 
                 <TextView
-                    android:id="@+id/tv_month_income"
+                    android:id="@+id/tv_balance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="3,500,000 VND"
+                    android:text="0 VND"
                     android:textColor="@android:color/white"
                     android:textSize="24sp"
                     android:textStyle="bold"
@@ -53,27 +53,11 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Lịch sử thu nhập gần đây"
-            android:textColor="#333333"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp"/>
-
-        <!-- RecyclerView cho danh sách thu nhập -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_incomes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"
-            android:layout_marginBottom="16dp"/>
-
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_add_balance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Thêm thu nhập mới"
+            android:text="Thêm số dư mới"
             android:textColor="@android:color/white"
             app:icon="@drawable/add"
             app:iconTint="@android:color/white"

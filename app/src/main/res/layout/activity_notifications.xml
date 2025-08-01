@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="#1A237E"
+        android:layout_marginTop="30dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <TextView
@@ -40,6 +41,7 @@
         android:text="Thông báo chưa đọc: 0"
         android:textSize="16sp"
         android:textColor="#333333"
+        android:layout_marginLeft="110dp"
         android:padding="16dp" />
 
     <!-- ListView cho danh sách thông báo -->

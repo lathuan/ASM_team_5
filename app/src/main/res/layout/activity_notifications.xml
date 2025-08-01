@@ -3,20 +3,53 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:background="#F5F7FB">
 
+    <!-- Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#1A237E"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thông báo"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:layout_gravity="center" />
+
+        <ImageView
+            android:id="@+id/btn_close"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/close"
+            android:contentDescription="Đóng"
+            android:layout_gravity="end"
+            android:padding="12dp"
+            android:background="?attr/selectableItemBackgroundBorderless" />
+    </androidx.appcompat.widget.Toolbar>
+
+    <!-- TextView cho số lượng thông báo chưa đọc -->
     <TextView
         android:id="@+id/tv_unread_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Thông báo chưa đọc: 0"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:textColor="#333333"
-        android:layout_marginBottom="16dp"/>
+        android:padding="16dp" />
 
+    <!-- ListView cho danh sách thông báo -->
     <ListView
         android:id="@+id/list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
+        android:padding="8dp" />
 
 </LinearLayout>

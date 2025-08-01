@@ -22,6 +22,8 @@ import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -40,12 +42,23 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
+//        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        // Khởi tạo DrawerLayout và NavigationView
+        // Khởi tạo các view từ activity_main
         drawerLayout = findViewById(R.id.drawer_layout);
+        iconSearch = findViewById(R.id.icon_search);
+        iconNotifications = findViewById(R.id.icon_notifications);
+        fabAdd = findViewById(R.id.fab_add);
+
         NavigationView navigationView = findViewById(R.id.nav_view);
+        if (navigationView != null) {
+            navigationView.setNavigationItemSelectedListener(item -> {
+                int id = item.getItemId();
+                handleNavigationItemSelected(id); // Gọi phương thức xử lý
+                return true;
+            });
+        }
 
         // Thiết lập Toolbar
         com.google.android.material.appbar.MaterialToolbar toolbar = findViewById(R.id.toolbar);
@@ -59,23 +72,6 @@ public class MainActivity extends AppCompatActivity {
             toggle.syncState();
         }
 
-        // Xử lý sự kiện chọn mục trong Navigation Drawer
-        if (navigationView != null) {
-            navigationView.setNavigationItemSelectedListener(item -> {
-                int id = item.getItemId();
-                handleNavigationItemSelected(id);
-                if (drawerLayout != null) drawerLayout.closeDrawer(GravityCompat.START);
-                return true;
-            });
-        }
-
-        // Khởi tạo các biểu tượng và TextView trên giao diện
-        iconSearch = findViewById(R.id.icon_search);
-        iconNotifications = findViewById(R.id.icon_notifications);
-        notificationBadge = findViewById(R.id.notification_badge);
-        tvBalance = findViewById(R.id.tvBalance);
-        tvTotalExpense = findViewById(R.id.tvTotalExpense);
-        fabAdd = findViewById(R.id.fab_add);
 
         // Xử lý sự kiện nhấn nút Tìm kiếm
         if (iconSearch != null) {
@@ -98,6 +94,8 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
+
+
         // Xử lý sự kiện nhấn nút Thông báo
         if (iconNotifications != null) {
             iconNotifications.setOnClickListener(v -> {
@@ -116,10 +114,15 @@ public class MainActivity extends AppCompatActivity {
 
         // Xử lý thanh điều hướng dưới
         LinearLayout navHome = findViewById(R.id.nav_home);
-        LinearLayout navToi = findViewById(R.id.nav_toi);
+        LinearLayout navProfile = findViewById(R.id.nav_toi);
 
-        if (navHome != null) navHome.setOnClickListener(v -> Toast.makeText(MainActivity.this, "Đã chọn Trang Chủ", Toast.LENGTH_SHORT).show());
-        if (navToi != null) navToi.setOnClickListener(v -> Toast.makeText(MainActivity.this, "Đã chọn Hồ Sơ", Toast.LENGTH_SHORT).show());
+        navHome.setOnClickListener(v -> showFragment(new HomeFragment()));
+
+        navProfile.setOnClickListener(v -> {
+            // Chuyển đến trang hồ sơ
+            ProfileFragment profileFragment = new ProfileFragment();
+            showFragment(profileFragment);
+        });
 
         // Xử lý Window Insets
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -133,11 +136,9 @@ public class MainActivity extends AppCompatActivity {
             fabAdd.setOnClickListener(v -> showAddBalanceDialog());
         }
 
-        // Cập nhật thông tin người dùng
-        updateUserInfo();
-        updateBalance();
-        updateTotalExpense();
-        if (notificationBadge != null) updateNotificationBadge(getUnreadNotificationCount());
+        // Hiển thị Fragment mặc định
+        showFragment(new HomeFragment());
+
     }
 
     @Override
@@ -239,26 +240,16 @@ public class MainActivity extends AppCompatActivity {
             if (textViewUserEmail != null) textViewUserEmail.setText(email);
         }
 
-        TextView tvUsername = findViewById(R.id.tvUsername);
-        if (tvUsername != null) tvUsername.setText(username);
+//        TextView tvUsername = findViewById(R.id.tvUsername);
+//        if (tvUsername != null) tvUsername.setText(username);
     }
 
     // Cập nhật số dư từ SharedPreferences
     private void updateBalance() {
-        if (tvBalance != null) {
-            SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
-            long balance = prefs.getLong("balance", 0); // Giá trị mặc định 0 VND
-            tvBalance.setText(String.format("Số dư: %,d VND", balance));
-        }
     }
 
     // Cập nhật tổng chi tiêu từ SharedPreferences
     private void updateTotalExpense() {
-        if (tvTotalExpense != null) {
-            SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
-            long totalExpense = prefs.getLong("totalExpense", 0); // Giá trị mặc định 0 VND
-            tvTotalExpense.setText(String.format("Tổng chi tiêu: %,d VND", totalExpense));
-        }
     }
 
     // Hiển thị dialog để thêm số dư hoặc chi tiêu
@@ -312,8 +303,10 @@ public class MainActivity extends AppCompatActivity {
                             }
 
                             editor.apply();
-                            updateBalance();
-                            updateTotalExpense();
+
+                            // CẬP NHẬT DỮ LIỆU TRONG FRAGMENT HIỆN TẠI
+                            refreshCurrentFragment();
+
                             addNotification(actionMessage);
                             Toast.makeText(MainActivity.this, actionMessage + " - Số dư: " + String.format("%,d VND", prefs.getLong("balance", 0)) + ", Chi tiêu: " + String.format("%,d VND", prefs.getLong("totalExpense", 0)), Toast.LENGTH_SHORT).show();
                         } else {
@@ -332,6 +325,15 @@ public class MainActivity extends AppCompatActivity {
         });
 
         builder.show();
+    }
+
+    // Thêm phương thức này để cập nhật Fragment hiện tại
+    private void refreshCurrentFragment() {
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (currentFragment instanceof HomeFragment) {
+            ((HomeFragment) currentFragment).refreshData();
+        }
+        // Fragment khác
     }
 
     // Thêm thông báo về hoạt động
@@ -354,31 +356,88 @@ public class MainActivity extends AppCompatActivity {
 
     // Xử lý chọn mục trong Navigation Drawer
     private void handleNavigationItemSelected(int id) {
+        Fragment fragment = null;
+
         if (id == R.id.nav_home_drawer) {
-            Toast.makeText(this, "Đã chọn Trang Chủ", Toast.LENGTH_SHORT).show();
+            fragment = new HomeFragment();
         } else if (id == R.id.nav_expense_tracking) {
-            Toast.makeText(this, "Đã chọn Theo Dõi Chi Tiêu", Toast.LENGTH_SHORT).show();
+            fragment = new ExpenseTrackingFragment();
         } else if (id == R.id.nav_income_tracking) {
-            Toast.makeText(this, "Đã chọn Theo Dõi Thu Nhập", Toast.LENGTH_SHORT).show();
+            fragment = new IncomeTrackingFragment();
         } else if (id == R.id.nav_budget_setting) {
-            Toast.makeText(this, "Đã chọn Cài Đặt Ngân Sách", Toast.LENGTH_SHORT).show();
+            fragment = new BudgetSettingFragment();
         } else if (id == R.id.nav_expense_overview) {
-            Toast.makeText(this, "Đã chọn Tổng Quan Chi Tiêu", Toast.LENGTH_SHORT).show();
+            fragment = new ExpenseOverviewFragment();
         } else if (id == R.id.nav_savings_goals) {
-            Toast.makeText(this, "Đã chọn Mục Tiêu Tiết Kiệm", Toast.LENGTH_SHORT).show();
+            fragment = new SavingsGoalsFragment();
         } else if (id == R.id.nav_salary) {
-            Toast.makeText(this, "Đã chọn Lương", Toast.LENGTH_SHORT).show();
+            fragment = new SalaryFragment();
         } else if (id == R.id.nav_statistical) {
-            Toast.makeText(this, "Đã chọn Thống Kê", Toast.LENGTH_SHORT).show();
+            fragment = new StatisticalFragment();
         } else if (id == R.id.nav_report) {
-            Toast.makeText(this, "Đã chọn Báo Cáo", Toast.LENGTH_SHORT).show();
+            fragment = new ReportFragment();
         } else if (id == R.id.nav_search_drawer) {
             if (iconSearch != null) iconSearch.performClick();
+            return;
         } else if (id == R.id.nav_notifications_drawer) {
             if (iconNotifications != null) iconNotifications.performClick();
+            return;
         } else if (id == R.id.nav_settings_drawer) {
-            Toast.makeText(this, "Đã chọn Cài Đặt", Toast.LENGTH_SHORT).show();
+            // Xử lý cài đặt
+            Toast.makeText(this, "Chức năng cài đặt", Toast.LENGTH_SHORT).show();
+            return;
         }
+
+        if (fragment != null) {
+            showFragment(fragment);
+        } else {
+            // Đóng Drawer ngay cả khi không chuyển Fragment
+            drawerLayout.closeDrawer(GravityCompat.START, true);
+        }
+
+//        if (id == R.id.nav_home_drawer) {
+//            Toast.makeText(this, "Đã chọn Trang Chủ", Toast.LENGTH_SHORT).show();
+//        } else if (id == R.id.nav_expense_tracking) {
+//            Toast.makeText(this, "Đã chọn Theo Dõi Chi Tiêu", Toast.LENGTH_SHORT).show();
+//        } else if (id == R.id.nav_income_tracking) {
+//            Toast.makeText(this, "Đã chọn Theo Dõi Thu Nhập", Toast.LENGTH_SHORT).show();
+//        } else if (id == R.id.nav_budget_setting) {
+//            Toast.makeText(this, "Đã chọn Cài Đặt Ngân Sách", Toast.LENGTH_SHORT).show();
+//        } else if (id == R.id.nav_expense_overview) {
+//            Toast.makeText(this, "Đã chọn Tổng Quan Chi Tiêu", Toast.LENGTH_SHORT).show();
+//        } else if (id == R.id.nav_savings_goals) {
+//            Toast.makeText(this, "Đã chọn Mục Tiêu Tiết Kiệm", Toast.LENGTH_SHORT).show();
+//        } else if (id == R.id.nav_salary) {
+//            Toast.makeText(this, "Đã chọn Lương", Toast.LENGTH_SHORT).show();
+//        } else if (id == R.id.nav_statistical) {
+//            Toast.makeText(this, "Đã chọn Thống Kê", Toast.LENGTH_SHORT).show();
+//        } else if (id == R.id.nav_report) {
+//            Toast.makeText(this, "Đã chọn Báo Cáo", Toast.LENGTH_SHORT).show();
+//        } else if (id == R.id.nav_search_drawer) {
+//            if (iconSearch != null) iconSearch.performClick();
+//        } else if (id == R.id.nav_notifications_drawer) {
+//            if (iconNotifications != null) iconNotifications.performClick();
+//        } else if (id == R.id.nav_settings_drawer) {
+//            Toast.makeText(this, "Đã chọn Cài Đặt", Toast.LENGTH_SHORT).show();
+//        }
+    }
+
+    private void showFragment(Fragment fragment) {
+        // Đóng Drawer với hiệu ứng mượt
+        drawerLayout.closeDrawer(GravityCompat.START, true);
+
+        // Hiệu ứng chuyển Fragment
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(
+                R.anim.slide_in_right,
+                R.anim.slide_out_left,
+                R.anim.slide_in_left,
+                R.anim.slide_out_right
+        );
+
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     // Xử lý nút Back để đóng Drawer

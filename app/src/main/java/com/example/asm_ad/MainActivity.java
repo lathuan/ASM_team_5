@@ -178,6 +178,23 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Thêm các phương thức helper
+    private void updateBalance() {
+        SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
+        String userIdStr = prefs.getString("userId", null);
+        if (userIdStr != null) {
+            int userId = Integer.parseInt(userIdStr);
+            DatabaseHelper dbHelper = new DatabaseHelper(this);
+            double balance = dbHelper.getUserBalance(userId);
+            if (tvBalance != null) tvBalance.setText(String.format("%,.0f VND", balance));
+        }
+    }
+
+    private void updateTotalExpense() {
+        // Tương tự như trên
+    }
+
+
     @Override
     public void onUserInteraction() {
         super.onUserInteraction();
@@ -244,14 +261,6 @@ public class MainActivity extends AppCompatActivity {
 //        if (tvUsername != null) tvUsername.setText(username);
     }
 
-    // Cập nhật số dư từ SharedPreferences
-    private void updateBalance() {
-    }
-
-    // Cập nhật tổng chi tiêu từ SharedPreferences
-    private void updateTotalExpense() {
-    }
-
     // Hiển thị dialog để thêm số dư hoặc chi tiêu
     private void showAddBalanceDialog() {
         if (!isUserLoggedIn()) {
@@ -277,38 +286,43 @@ public class MainActivity extends AppCompatActivity {
                 String amountStr = input.getText().toString().trim();
                 if (!amountStr.isEmpty()) {
                     try {
-                        long amount = Long.parseLong(amountStr);
+                        double amount = Double.parseDouble(amountStr);
                         if (amount > 0) {
                             SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
-                            SharedPreferences.Editor editor = prefs.edit();
-                            long currentBalance = prefs.getLong("balance", 0);
-                            long currentExpense = prefs.getLong("totalExpense", 0);
+                            String userIdStr = prefs.getString("userId", null);
+                            if (userIdStr == null) {
+                                Toast.makeText(MainActivity.this, "Lỗi: Không tìm thấy người dùng", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            int userId = Integer.parseInt(userIdStr);
+
+                            DatabaseHelper dbHelper = new DatabaseHelper(MainActivity.this);
+                            double currentBalance = dbHelper.getUserBalance(userId);
+                            double currentExpense = dbHelper.getUserTotalExpense(userId);
                             String actionMessage = "";
 
                             if (which == 0) { // Thêm số dư
-                                long newBalance = currentBalance + amount;
-                                editor.putLong("balance", newBalance);
-                                actionMessage = "Đã thêm " + String.format("%,d VND", amount) + " vào số dư";
+                                double newBalance = currentBalance + amount;
+                                dbHelper.updateUserBalance(userId, newBalance);
+                                actionMessage = "Đã thêm " + String.format("%,.0f VND", amount) + " vào số dư";
                             } else { // Thêm chi tiêu
                                 if (currentBalance >= amount) {
-                                    long newBalance = currentBalance - amount;
-                                    long newExpense = currentExpense + amount;
-                                    editor.putLong("balance", newBalance);
-                                    editor.putLong("totalExpense", newExpense);
-                                    actionMessage = "Đã chi tiêu " + String.format("%,d VND", amount);
+                                    double newBalance = currentBalance - amount;
+                                    double newExpense = currentExpense + amount;
+                                    dbHelper.updateUserBalance(userId, newBalance);
+                                    dbHelper.updateUserExpense(userId, newExpense);
+                                    actionMessage = "Đã chi tiêu " + String.format("%,.0f VND", amount);
                                 } else {
                                     Toast.makeText(MainActivity.this, "Số dư không đủ để chi tiêu!", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
                             }
 
-                            editor.apply();
-
-                            // CẬP NHẬT DỮ LIỆU TRONG FRAGMENT HIỆN TẠI
+                            // Cập nhật giao diện
                             refreshCurrentFragment();
-
                             addNotification(actionMessage);
-                            Toast.makeText(MainActivity.this, actionMessage + " - Số dư: " + String.format("%,d VND", prefs.getLong("balance", 0)) + ", Chi tiêu: " + String.format("%,d VND", prefs.getLong("totalExpense", 0)), Toast.LENGTH_SHORT).show();
+
+                            Toast.makeText(MainActivity.this, actionMessage, Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(MainActivity.this, "Số tiền phải lớn hơn 0", Toast.LENGTH_SHORT).show();
                         }
@@ -366,12 +380,8 @@ public class MainActivity extends AppCompatActivity {
             fragment = new IncomeTrackingFragment();
         } else if (id == R.id.nav_budget_setting) {
             fragment = new BudgetSettingFragment();
-        } else if (id == R.id.nav_expense_overview) {
-            fragment = new ExpenseOverviewFragment();
-        } else if (id == R.id.nav_savings_goals) {
+        }  else if (id == R.id.nav_savings_goals) {
             fragment = new SavingsGoalsFragment();
-        } else if (id == R.id.nav_salary) {
-            fragment = new SalaryFragment();
         } else if (id == R.id.nav_statistical) {
             fragment = new StatisticalFragment();
         } else if (id == R.id.nav_report) {
@@ -394,32 +404,6 @@ public class MainActivity extends AppCompatActivity {
             // Đóng Drawer ngay cả khi không chuyển Fragment
             drawerLayout.closeDrawer(GravityCompat.START, true);
         }
-
-//        if (id == R.id.nav_home_drawer) {
-//            Toast.makeText(this, "Đã chọn Trang Chủ", Toast.LENGTH_SHORT).show();
-//        } else if (id == R.id.nav_expense_tracking) {
-//            Toast.makeText(this, "Đã chọn Theo Dõi Chi Tiêu", Toast.LENGTH_SHORT).show();
-//        } else if (id == R.id.nav_income_tracking) {
-//            Toast.makeText(this, "Đã chọn Theo Dõi Thu Nhập", Toast.LENGTH_SHORT).show();
-//        } else if (id == R.id.nav_budget_setting) {
-//            Toast.makeText(this, "Đã chọn Cài Đặt Ngân Sách", Toast.LENGTH_SHORT).show();
-//        } else if (id == R.id.nav_expense_overview) {
-//            Toast.makeText(this, "Đã chọn Tổng Quan Chi Tiêu", Toast.LENGTH_SHORT).show();
-//        } else if (id == R.id.nav_savings_goals) {
-//            Toast.makeText(this, "Đã chọn Mục Tiêu Tiết Kiệm", Toast.LENGTH_SHORT).show();
-//        } else if (id == R.id.nav_salary) {
-//            Toast.makeText(this, "Đã chọn Lương", Toast.LENGTH_SHORT).show();
-//        } else if (id == R.id.nav_statistical) {
-//            Toast.makeText(this, "Đã chọn Thống Kê", Toast.LENGTH_SHORT).show();
-//        } else if (id == R.id.nav_report) {
-//            Toast.makeText(this, "Đã chọn Báo Cáo", Toast.LENGTH_SHORT).show();
-//        } else if (id == R.id.nav_search_drawer) {
-//            if (iconSearch != null) iconSearch.performClick();
-//        } else if (id == R.id.nav_notifications_drawer) {
-//            if (iconNotifications != null) iconNotifications.performClick();
-//        } else if (id == R.id.nav_settings_drawer) {
-//            Toast.makeText(this, "Đã chọn Cài Đặt", Toast.LENGTH_SHORT).show();
-//        }
     }
 
     private void showFragment(Fragment fragment) {
@@ -449,8 +433,6 @@ public class MainActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
-
-    // Chuỗi cho Drawer Toggle
     private static final int R_string_navigation_drawer_open = R.string.navigation_drawer_open;
     private static final int R_string_navigation_drawer_close = R.string.navigation_drawer_close;
 }

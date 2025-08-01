@@ -53,15 +53,31 @@ public class HomeFragment extends Fragment {
 
     private void updateBalance() {
         SharedPreferences prefs = getActivity().getSharedPreferences("UserSession", Context.MODE_PRIVATE);
-        long balance = prefs.getLong("balance", 0);
-        if (tvBalance != null) tvBalance.setText(String.format("%,d VND", balance));
+        String userIdStr = prefs.getString("userId", null);
+        if (userIdStr != null) {
+            int userId = Integer.parseInt(userIdStr);
+            DatabaseHelper dbHelper = new DatabaseHelper(getActivity());
+            double balance = dbHelper.getUserBalance(userId);
+            if (tvBalance != null) tvBalance.setText(String.format("%,.0f VND", balance));
+        }
     }
 
     private void updateTotalExpense() {
         SharedPreferences prefs = getActivity().getSharedPreferences("UserSession", Context.MODE_PRIVATE);
-        long totalExpense = prefs.getLong("totalExpense", 0);
-        if (tvTotalExpense != null) tvTotalExpense.setText(String.format("%,d VND", totalExpense));
+        String userIdStr = prefs.getString("userId", null);
+        if (userIdStr != null) {
+            int userId = Integer.parseInt(userIdStr);
+            DatabaseHelper dbHelper = new DatabaseHelper(getActivity());
+            double totalExpense = dbHelper.getUserTotalExpense(userId);
+            if (tvTotalExpense != null) tvTotalExpense.setText(String.format("%,.0f VND", totalExpense));
+        }
     }
+
+    // Thêm phương thức mới cho thu nhập
+    private void updateTotalIncome() {
+
+    }
+
 
     // Có thể thêm phương thức để MainActivity gọi khi cần cập nhật
     public void refreshData() {

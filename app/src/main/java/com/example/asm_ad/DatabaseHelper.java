@@ -1,12 +1,14 @@
 package com.example.asm_ad;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "UserDatabase.db";
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 4;
 
     // --- Bảng User ---
     public static final String TABLE_USER = "User";
@@ -87,6 +89,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_RECURRING_START = "StartDate";
     public static final String COLUMN_RECURRING_END = "EndDate";
     public static final String COLUMN_RECURRING_DESCRIPTION = "Description";
+    // Thêm vào các constant
+    public static final String TABLE_FINANCE = "Finance";
+    public static final String COLUMN_FINANCE_ID = "id";
+    public static final String COLUMN_FINANCE_USER_ID = "user_id";
+    public static final String COLUMN_FINANCE_BALANCE = "balance";
+    public static final String COLUMN_FINANCE_TOTAL_EXPENSE = "total_expense";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -185,9 +193,81 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "FOREIGN KEY(" + COLUMN_RECURRING_USER_ID + ") REFERENCES " + TABLE_USER + "(" + COLUMN_USER_ID + "), " +
                 "FOREIGN KEY(" + COLUMN_RECURRING_CATEGORY_ID + ") REFERENCES " + TABLE_CATEGORY + "(" + COLUMN_CATEGORY_ID + "))");
 
+        //FINANCE
+        db.execSQL("CREATE TABLE " + TABLE_FINANCE + " (" +
+                COLUMN_FINANCE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUMN_FINANCE_USER_ID + " INTEGER NOT NULL UNIQUE, " +
+                COLUMN_FINANCE_BALANCE + " REAL DEFAULT 0, " +
+                COLUMN_FINANCE_TOTAL_EXPENSE + " REAL DEFAULT 0, " +
+                "FOREIGN KEY(" + COLUMN_FINANCE_USER_ID + ") REFERENCES " + TABLE_USER + "(" + COLUMN_USER_ID + "))");
+
         // Insert role default
         db.execSQL("INSERT INTO " + TABLE_ROLE + " (" + COLUMN_ROLE_ID + ", " + COLUMN_ROLE_NAME + ") VALUES (1, 'Học sinh')");
         db.execSQL("INSERT INTO " + TABLE_ROLE + " (" + COLUMN_ROLE_ID + ", " + COLUMN_ROLE_NAME + ") VALUES (2, 'Admin')");
+    }
+
+
+    public long addFinanceRecord(int userId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_FINANCE_USER_ID, userId);
+        values.put(COLUMN_FINANCE_BALANCE, 0);
+        values.put(COLUMN_FINANCE_TOTAL_EXPENSE, 0);
+        return db.insert(TABLE_FINANCE, null, values);
+    }
+
+    public boolean updateUserBalance(int userId, double newBalance) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_FINANCE_BALANCE, newBalance);
+        int rowsAffected = db.update(TABLE_FINANCE, values,
+                COLUMN_FINANCE_USER_ID + " = ?", new String[]{String.valueOf(userId)});
+        return rowsAffected > 0;
+    }
+
+    public boolean updateUserExpense(int userId, double newExpense) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_FINANCE_TOTAL_EXPENSE, newExpense);
+        int rowsAffected = db.update(TABLE_FINANCE, values,
+                COLUMN_FINANCE_USER_ID + " = ?", new String[]{String.valueOf(userId)});
+        return rowsAffected > 0;
+    }
+
+    public double getUserBalance(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT " + COLUMN_FINANCE_BALANCE + " FROM " + TABLE_FINANCE +
+                " WHERE " + COLUMN_FINANCE_USER_ID + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
+        if (cursor.moveToFirst()) {
+            return cursor.getDouble(0);
+        }
+        return 0;
+    }
+
+    public double getUserTotalExpense(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT " + COLUMN_FINANCE_TOTAL_EXPENSE + " FROM " + TABLE_FINANCE +
+                " WHERE " + COLUMN_FINANCE_USER_ID + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
+        if (cursor.moveToFirst()) {
+            return cursor.getDouble(0);
+        }
+        return 0;
+    }
+
+
+    public boolean hasFinanceRecord(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT COUNT(*) FROM " + TABLE_FINANCE +
+                " WHERE " + COLUMN_FINANCE_USER_ID + " = ?";
+
+        try (Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)})) {
+            if (cursor.moveToFirst()) {
+                return cursor.getInt(0) > 0;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -201,6 +281,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_INCOME);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ROLE);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_FINANCE);
         onCreate(db);
     }
 }

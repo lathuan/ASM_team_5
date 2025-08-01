@@ -73,9 +73,14 @@ public class RegisterActivity extends AppCompatActivity {
             values.put(DatabaseHelper.COLUMN_USER_PHONE, phone);
             values.put(DatabaseHelper.COLUMN_USER_ROLE_ID, 1);
             long newRowId = db.insert(DatabaseHelper.TABLE_USER, null, values);
+
             if (newRowId != -1) {
-                Toast.makeText(this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                int newUserId = (int) newRowId;
+                dbHelper.addFinanceRecord(newUserId);
+                Toast.makeText(this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
+
+
                 try {
                     startActivity(intent);
                     finish();

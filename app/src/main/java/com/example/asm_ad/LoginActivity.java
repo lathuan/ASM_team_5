@@ -70,39 +70,68 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             SQLiteDatabase db = dbHelper.getReadableDatabase();
-            String[] columns = {DatabaseHelper.COLUMN_USER_ID};
-            String selection = DatabaseHelper.COLUMN_USER_USERNAME + " = ? AND " + DatabaseHelper.COLUMN_USER_PASSWORD + " = ?";
+            String[] columns = {
+                    DatabaseHelper.COLUMN_USER_ID,
+                    DatabaseHelper.COLUMN_USER_EMAIL,
+                    DatabaseHelper.COLUMN_USER_FULLNAME
+            };
+
+            String selection = DatabaseHelper.COLUMN_USER_USERNAME + " = ? AND " +
+                    DatabaseHelper.COLUMN_USER_PASSWORD + " = ?";
             String[] selectionArgs = {username, password};
-            Cursor cursor = db.query(DatabaseHelper.TABLE_USER, columns, selection, selectionArgs, null, null, null);
 
-            if (cursor.moveToFirst()) {
-                // Lấy userId từ cơ sở dữ liệu
-                int userIdColumnIndex = cursor.getColumnIndex(DatabaseHelper.COLUMN_USER_ID);
-                String userId = (userIdColumnIndex != -1) ? cursor.getString(userIdColumnIndex) : "user123"; // Giá trị mặc định nếu không tìm thấy
+            try (Cursor cursor = db.query(
+                    DatabaseHelper.TABLE_USER,
+                    columns,
+                    selection,
+                    selectionArgs,
+                    null, null, null
+            )) {
+                if (cursor.moveToFirst()) {
+                    // Lấy chỉ số cột AN TOÀN
+                    int userIdIndex = cursor.getColumnIndex(DatabaseHelper.COLUMN_USER_ID);
+                    if (userIdIndex == -1) {
+                        Toast.makeText(this, "Lỗi: Không tìm thấy cột ID", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-                // Lưu session vào SharedPreferences
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putBoolean("isLoggedIn", true);
-                editor.putString("username", username);
-                editor.putString("userId", userId);
-                editor.putString("email", username + "@example.com"); // Giá trị mặc định, có thể lấy từ DB
-                editor.putLong("lastActiveTime", System.currentTimeMillis());
-                editor.putLong("balance", 0); // Số dư mặc định là 0
-                editor.putString("notifications", ""); // Danh sách hoạt động rỗng
-                editor.putInt("unreadNotifications", 0); // Số thông báo chưa đọc mặc định
-                editor.apply();
+                    int userId = cursor.getInt(userIdIndex);
+                    int emailIndex = cursor.getColumnIndex(DatabaseHelper.COLUMN_USER_EMAIL);
+                    int fullNameIndex = cursor.getColumnIndex(DatabaseHelper.COLUMN_USER_FULLNAME);
 
-                Toast.makeText(this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
-            } else {
-                Toast.makeText(this, "Tên đăng nhập hoặc mật khẩu không đúng!", Toast.LENGTH_SHORT).show();
+                    String email = emailIndex != -1 ? cursor.getString(emailIndex) : "";
+                    String fullName = fullNameIndex != -1 ? cursor.getString(fullNameIndex) : "";
+
+                    // Sử dụng dbHelper instance đã có, KHÔNG tạo mới
+                    if (!dbHelper.hasFinanceRecord(userId)) {
+                        dbHelper.addFinanceRecord(userId);
+                    }
+
+                    // Lưu session
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putString("userId", String.valueOf(userId));
+                    editor.putBoolean("isLoggedIn", true);
+                    editor.putString("username", username);
+                    editor.putString("fullName", fullName);
+                    editor.putString("email", email);
+                    editor.putLong("lastActiveTime", System.currentTimeMillis());
+                    editor.putString("notifications", "");
+                    editor.putInt("unreadNotifications", 0);
+                    editor.apply();
+
+                    Toast.makeText(this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(this, "Tên đăng nhập hoặc mật khẩu không đúng!", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                Toast.makeText(this, "Lỗi đăng nhập: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                e.printStackTrace();
             }
-            cursor.close();
         });
-
         btnSignin.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
             try {

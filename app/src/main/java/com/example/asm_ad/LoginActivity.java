@@ -7,13 +7,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText edtLoginUN, edtLoginPassword;
-    private Button btnLogin, btnSignin;
+    private Button btnLogin;
     private DatabaseHelper dbHelper;
 
     @Override
@@ -37,11 +38,11 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(this, "Lỗi: Không tìm thấy Button login", Toast.LENGTH_SHORT).show();
             return;
         }
-        btnSignin = findViewById(R.id.btnSignin);
-        if (btnSignin == null) {
-            Toast.makeText(this, "Lỗi: Không tìm thấy Button signin", Toast.LENGTH_SHORT).show();
-            return;
-        }
+//        btnSignin = findViewById(R.id.btnLogin);
+//        if (btnSignin == null) {
+//            Toast.makeText(this, "Lỗi: Không tìm thấy Button signin", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
 
         SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
         boolean isLoggedIn = prefs.getBoolean("isLoggedIn", false);
@@ -59,6 +60,20 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
+
+        // Thêm sự kiện cho TextView đăng ký
+        TextView tvRegister = findViewById(R.id.tvRegister);
+        tvRegister.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+            startActivity(intent);
+        });
+
+        // Xử lý nút quên mật khẩu
+        TextView tvForgotPassword = findViewById(R.id.tvForgotPassword);
+        tvForgotPassword.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
+            startActivity(intent);
+        });
 
         btnLogin.setOnClickListener(v -> {
             String username = edtLoginUN.getText().toString().trim();
@@ -132,14 +147,14 @@ public class LoginActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         });
-        btnSignin.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-            try {
-                startActivity(intent);
-            } catch (Exception e) {
-                Toast.makeText(this, "Lỗi: " + e.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
+//        btnSignin.setOnClickListener(v -> {
+//            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+//            try {
+//                startActivity(intent);
+//            } catch (Exception e) {
+//                Toast.makeText(this, "Lỗi: " + e.getMessage(), Toast.LENGTH_LONG).show();
+//            }
+//        });
     }
 
     @Override

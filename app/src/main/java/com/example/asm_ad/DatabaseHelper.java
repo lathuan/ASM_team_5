@@ -270,6 +270,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return false;
     }
 
+    // Thêm phương thức này vào DatabaseHelper.java
+    public boolean checkEmailExists(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_USER + " WHERE " + COLUMN_USER_EMAIL + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{email});
+        boolean exists = cursor.getCount() > 0;
+        cursor.close();
+        return exists;
+    }
+
+    // Phương thức cập nhật mật khẩu mới
+    public boolean updatePassword(String email, String newPassword) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_USER_PASSWORD, newPassword);
+
+        int rowsAffected = db.update(TABLE_USER, values,
+                COLUMN_USER_EMAIL + " = ?", new String[]{email});
+
+        return rowsAffected > 0;
+    }
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_RECURRING_EXPENSE);

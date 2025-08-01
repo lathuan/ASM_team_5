@@ -6,13 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
-import com.google.android.material.button.MaterialButton;
 
 public class IncomeTrackingFragment extends Fragment {
 
@@ -26,18 +23,12 @@ public class IncomeTrackingFragment extends Fragment {
 
         // Khởi tạo các view
         tvBalance = view.findViewById(R.id.tv_balance);
-        MaterialButton btnAddBalance = view.findViewById(R.id.btn_add_balance);
 
         // Khởi tạo DatabaseHelper
         dbHelper = new DatabaseHelper(requireContext());
 
         // Cập nhật giao diện
         refreshData();
-
-        // Xử lý nút Thêm số dư
-        btnAddBalance.setOnClickListener(v -> {
-            Toast.makeText(requireContext(), "Chức năng thêm số dư", Toast.LENGTH_SHORT).show();
-        });
 
         return view;
     }

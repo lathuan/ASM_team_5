@@ -330,7 +330,7 @@ public class MainActivity extends AppCompatActivity {
     private void saveExpenseToHistory(int userId, double amount, String description, String timestamp) {
         SharedPreferences prefs = getSharedPreferences("ExpenseHistory_" + userId, MODE_PRIVATE);
         String existingHistory = prefs.getString("expenses", "");
-        String newExpense = String.format("%,.0f VND|%s|%s\n", amount, description, timestamp);
+        String newExpense = amount + "|" + description + "|" + timestamp + "\n"; // Lưu trực tiếp số tiền
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("expenses", newExpense + existingHistory);
         editor.apply();

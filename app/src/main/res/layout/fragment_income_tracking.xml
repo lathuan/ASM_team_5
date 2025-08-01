@@ -53,17 +53,5 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_add_balance"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Thêm số dư mới"
-            android:textColor="@android:color/white"
-            app:icon="@drawable/add"
-            app:iconTint="@android:color/white"
-            app:backgroundTint="#4CAF50"
-            android:paddingVertical="12dp"
-            app:cornerRadius="8dp"/>
-
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

@@ -7,15 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +34,6 @@ public class ExpenseTrackingFragment extends Fragment {
         tvMonthExpense = view.findViewById(R.id.tv_month_expense);
         progressBar = view.findViewById(R.id.progress_bar);
         rvExpenses = view.findViewById(R.id.rv_expenses);
-        MaterialButton btnAddExpense = view.findViewById(R.id.btn_add_expense);
 
         // Khởi tạo DatabaseHelper
         dbHelper = new DatabaseHelper(requireContext());
@@ -49,11 +45,6 @@ public class ExpenseTrackingFragment extends Fragment {
 
         // Cập nhật giao diện
         refreshData();
-
-        // Xử lý nút Thêm chi tiêu
-        btnAddExpense.setOnClickListener(v -> {
-            Toast.makeText(requireContext(), "Chức năng thêm chi tiêu", Toast.LENGTH_SHORT).show();
-        });
 
         return view;
     }
@@ -83,7 +74,7 @@ public class ExpenseTrackingFragment extends Fragment {
                     String[] parts = line.split("\\|");
                     if (parts.length == 3) {
                         try {
-                            double amount = Double.parseDouble(parts[0].replace(" VND", "").replace(",", ""));
+                            double amount = Double.parseDouble(parts[0].trim());
                             String description = parts[1];
                             String timestamp = parts[2];
                             expenses.add(new Expense(amount, description, timestamp));

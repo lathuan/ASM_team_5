@@ -88,7 +88,8 @@ public class LoginActivity extends AppCompatActivity {
             String[] columns = {
                     DatabaseHelper.COLUMN_USER_ID,
                     DatabaseHelper.COLUMN_USER_EMAIL,
-                    DatabaseHelper.COLUMN_USER_FULLNAME
+                    DatabaseHelper.COLUMN_USER_FULLNAME,
+                    DatabaseHelper.COLUMN_USER_PHONE
             };
 
             String selection = DatabaseHelper.COLUMN_USER_USERNAME + " = ? AND " +
@@ -105,17 +106,20 @@ public class LoginActivity extends AppCompatActivity {
                 if (cursor.moveToFirst()) {
                     // Lấy chỉ số cột AN TOÀN
                     int userIdIndex = cursor.getColumnIndex(DatabaseHelper.COLUMN_USER_ID);
-                    if (userIdIndex == -1) {
-                        Toast.makeText(this, "Lỗi: Không tìm thấy cột ID", Toast.LENGTH_SHORT).show();
+                    int emailIndex = cursor.getColumnIndex(DatabaseHelper.COLUMN_USER_EMAIL);
+                    int fullNameIndex = cursor.getColumnIndex(DatabaseHelper.COLUMN_USER_FULLNAME);
+                    int phoneIndex = cursor.getColumnIndex(DatabaseHelper.COLUMN_USER_PHONE);
+
+                    if (userIdIndex == -1 || phoneIndex == -1) {
+                        Toast.makeText(this, "Lỗi: Không tìm thấy cột cần thiết", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-                    int userId = cursor.getInt(userIdIndex);
-                    int emailIndex = cursor.getColumnIndex(DatabaseHelper.COLUMN_USER_EMAIL);
-                    int fullNameIndex = cursor.getColumnIndex(DatabaseHelper.COLUMN_USER_FULLNAME);
 
+                    int userId = cursor.getInt(userIdIndex);
                     String email = emailIndex != -1 ? cursor.getString(emailIndex) : "";
                     String fullName = fullNameIndex != -1 ? cursor.getString(fullNameIndex) : "";
+                    String phone = phoneIndex != -1 ? cursor.getString(phoneIndex) : ""; // << LẤY GIÁ TRỊ PHONE TỪ CURSOR
 
                     // Sử dụng dbHelper instance đã có, KHÔNG tạo mới
                     if (!dbHelper.hasFinanceRecord(userId)) {
@@ -129,6 +133,7 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putString("username", username);
                     editor.putString("fullName", fullName);
                     editor.putString("email", email);
+                    editor.putString("phone", phone);
                     editor.putLong("lastActiveTime", System.currentTimeMillis());
                     editor.putString("notifications", "");
                     editor.putInt("unreadNotifications", 0);

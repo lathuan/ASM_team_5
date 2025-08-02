@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "UserDatabase.db";
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 6;
 
     // --- Bảng User ---
     public static final String TABLE_USER = "User";
@@ -95,6 +95,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_FINANCE_USER_ID = "user_id";
     public static final String COLUMN_FINANCE_BALANCE = "balance";
     public static final String COLUMN_FINANCE_TOTAL_EXPENSE = "total_expense";
+
+    // Thêm vào các constant
+//    public static final String TABLE_SETTINGS = "Settings";
+//    public static final String COLUMN_SETTINGS_ID = "id";
+//    public static final String COLUMN_SETTINGS_USER_ID = "user_id";
+//    public static final String COLUMN_SETTINGS_DARK_MODE = "dark_mode";
+//    public static final String COLUMN_SETTINGS_NOTIFICATIONS = "notifications";
+//    public static final String COLUMN_SETTINGS_NOTIFICATION_SOUND = "notification_sound";
+
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -201,6 +210,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_FINANCE_TOTAL_EXPENSE + " REAL DEFAULT 0, " +
                 "FOREIGN KEY(" + COLUMN_FINANCE_USER_ID + ") REFERENCES " + TABLE_USER + "(" + COLUMN_USER_ID + "))");
 
+
         // Insert role default
         db.execSQL("INSERT INTO " + TABLE_ROLE + " (" + COLUMN_ROLE_ID + ", " + COLUMN_ROLE_NAME + ") VALUES (1, 'Học sinh')");
         db.execSQL("INSERT INTO " + TABLE_ROLE + " (" + COLUMN_ROLE_ID + ", " + COLUMN_ROLE_NAME + ") VALUES (2, 'Admin')");
@@ -239,10 +249,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String query = "SELECT " + COLUMN_FINANCE_BALANCE + " FROM " + TABLE_FINANCE +
                 " WHERE " + COLUMN_FINANCE_USER_ID + " = ?";
         Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
-        if (cursor.moveToFirst()) {
-            return cursor.getDouble(0);
+        double balance = 0;
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                balance = cursor.getDouble(0);
+            }
+            cursor.close();
         }
-        return 0;
+        return balance;
     }
 
     public double getUserTotalExpense(int userId) {
@@ -291,6 +306,62 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return rowsAffected > 0;
     }
+
+    // Thêm
+    public boolean updateUserProfile(int userId, ContentValues values) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int rowsAffected = db.update(
+                TABLE_USER,
+                values,
+                COLUMN_USER_ID + " = ?",
+                new String[]{String.valueOf(userId)}
+        );
+        return rowsAffected > 0;
+    }
+
+
+
+    //xóa toàn bộ dữ liệu ng dùng
+    public boolean deleteAllUserData(int userId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        try {
+            db.beginTransaction();
+
+            // Xóa tất cả dữ liệu liên quan đến user
+            db.delete(TABLE_RECURRING_EXPENSE, COLUMN_RECURRING_USER_ID + " = ?", new String[]{String.valueOf(userId)});
+            db.delete(TABLE_NOTIFICATION, COLUMN_NOTIFICATION_USER_ID + " = ?", new String[]{String.valueOf(userId)});
+            db.delete(TABLE_BUDGET, COLUMN_BUDGET_USER_ID + " = ?", new String[]{String.valueOf(userId)});
+            db.delete(TABLE_GOAL, COLUMN_GOAL_USER_ID + " = ?", new String[]{String.valueOf(userId)});
+            db.delete(TABLE_EXPENSE, COLUMN_EXPENSE_USER_ID + " = ?", new String[]{String.valueOf(userId)});
+            db.delete(TABLE_CATEGORY, COLUMN_CATEGORY_USER_ID + " = ?", new String[]{String.valueOf(userId)});
+            db.delete(TABLE_INCOME, COLUMN_INCOME_USER_ID + " = ?", new String[]{String.valueOf(userId)});
+            db.delete(TABLE_FINANCE, COLUMN_FINANCE_USER_ID + " = ?", new String[]{String.valueOf(userId)});
+            db.delete(TABLE_USER, COLUMN_USER_ID + " = ?", new String[]{String.valueOf(userId)});
+
+            db.setTransactionSuccessful();
+            return true;
+        } catch (Exception e) {
+            return false;
+        } finally {
+            db.endTransaction();
+            db.close();
+        }
+    }
+
+    // Thêm phương thức quản lý cài đặt
+
+
+
+
+
+
+    // Thêm phương thức close()
+    @Override
+    public void close() {
+        super.close();
+    }
+
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

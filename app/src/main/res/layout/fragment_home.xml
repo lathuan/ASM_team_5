@@ -89,7 +89,7 @@
                             android:id="@+id/tvTotalIncome"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="500.000 VND"
+                            android:text="0 VND"
                             android:textColor="@android:color/white"
                             android:textSize="16sp"
                             android:textStyle="bold"/>

@@ -378,8 +378,45 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         return weeklyExpenses;
     }
-
-
+//Thêm phương thức theo dõi biểu đồ theo tháng
+    public float[] getMonthlyExpenses(int userId) {
+        float[] monthlyExpenses = new float[12];
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT strftime('%m', " + COLUMN_EXPENSE_DATE + ") AS month, " +
+                "SUM(" + COLUMN_EXPENSE_AMOUNT + ") as total " +
+                "FROM " + TABLE_EXPENSE + " " +
+                "WHERE " + COLUMN_EXPENSE_USER_ID + " = ? " +
+                "AND strftime('%Y', " + COLUMN_EXPENSE_DATE + ") = strftime('%Y', 'now') " +
+                "GROUP BY month " +
+                "ORDER BY month ASC";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
+        if (cursor.moveToFirst()) {
+            do {
+                int month = Integer.parseInt(cursor.getString(0)) - 1;
+                float total = cursor.getFloat(1);
+                if (month >= 0 && month < 12) {
+                    monthlyExpenses[month] = total;
+                }
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return monthlyExpenses;
+    }
+//chức năng tính và trả về tổng số tiền thu nhập của một người dùng cụ thể dựa trên userId
+    public double getUserTotalIncome(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT SUM(" + COLUMN_INCOME_AMOUNT + ") FROM " + TABLE_INCOME +
+                " WHERE " + COLUMN_INCOME_USER_ID + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
+        double totalIncome = 0;
+        if (cursor.moveToFirst()) {
+            totalIncome = cursor.getDouble(0);
+        }
+        cursor.close();
+        db.close();
+        return totalIncome;
+    }
 
 
 

@@ -14,7 +14,7 @@
         android:padding="12dp">
 
         <CheckBox
-            android:id="@+id/checkbox_expense"
+            android:id="@+id/checkbox_income"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"/>
@@ -26,16 +26,16 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tv_expense_amount"
+                android:id="@+id/tv_income_amount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="0 VND"
-                android:textColor="#D32F2F"
+                android:textColor="#4CAF50"
                 android:textSize="16sp"
                 android:textStyle="bold"/>
 
             <TextView
-                android:id="@+id/tv_expense_description"
+                android:id="@+id/tv_income_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Mô tả"
@@ -43,7 +43,7 @@
                 android:textSize="14sp"/>
 
             <TextView
-                android:id="@+id/tv_expense_timestamp"
+                android:id="@+id/tv_income_timestamp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Thời gian"

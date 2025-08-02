@@ -290,6 +290,8 @@ public class MainActivity extends AppCompatActivity {
                             if (which == 0) { // Thêm số dư
                                 double newBalance = currentBalance + amount;
                                 dbHelper.updateUserBalance(userId, newBalance);
+                                // Lưu lịch sử thu nhập
+                                saveIncomeToHistory(userId, amount, "Thêm số dư từ trang chủ", getCurrentDateTime());
                                 actionMessage = "Đã thêm " + String.format("%,.0f VND", amount) + " vào số dư";
                             } else { // Thêm chi tiêu
                                 if (currentBalance >= amount) {
@@ -297,7 +299,7 @@ public class MainActivity extends AppCompatActivity {
                                     double newExpense = currentExpense + amount;
                                     dbHelper.updateUserBalance(userId, newBalance);
                                     dbHelper.updateUserExpense(userId, newExpense);
-                                    // Lưu lịch sử chi tiêu vào SharedPreferences
+                                    // Lưu lịch sử chi tiêu
                                     saveExpenseToHistory(userId, amount, "Chi tiêu từ trang chủ", getCurrentDateTime());
                                     actionMessage = "Đã chi tiêu " + String.format("%,.0f VND", amount);
                                 } else {
@@ -330,9 +332,18 @@ public class MainActivity extends AppCompatActivity {
     private void saveExpenseToHistory(int userId, double amount, String description, String timestamp) {
         SharedPreferences prefs = getSharedPreferences("ExpenseHistory_" + userId, MODE_PRIVATE);
         String existingHistory = prefs.getString("expenses", "");
-        String newExpense = amount + "|" + description + "|" + timestamp + "\n"; // Lưu trực tiếp số tiền
+        String newExpense = amount + "|" + description + "|" + timestamp + "\n";
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("expenses", newExpense + existingHistory);
+        editor.apply();
+    }
+
+    private void saveIncomeToHistory(int userId, double amount, String description, String timestamp) {
+        SharedPreferences prefs = getSharedPreferences("IncomeHistory_" + userId, MODE_PRIVATE);
+        String existingHistory = prefs.getString("incomes", "");
+        String newIncome = amount + "|" + description + "|" + timestamp + "\n";
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("incomes", newIncome + existingHistory);
         editor.apply();
     }
 
@@ -342,6 +353,8 @@ public class MainActivity extends AppCompatActivity {
             ((HomeFragment) currentFragment).refreshData();
         } else if (currentFragment instanceof ExpenseTrackingFragment) {
             ((ExpenseTrackingFragment) currentFragment).refreshData();
+        } else if (currentFragment instanceof IncomeTrackingFragment) {
+            ((IncomeTrackingFragment) currentFragment).refreshData();
         }
     }
 

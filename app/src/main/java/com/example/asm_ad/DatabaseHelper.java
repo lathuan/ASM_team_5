@@ -89,7 +89,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_RECURRING_START = "StartDate";
     public static final String COLUMN_RECURRING_END = "EndDate";
     public static final String COLUMN_RECURRING_DESCRIPTION = "Description";
-    // Thêm vào các constant
+    // 10,Thêm vào các constant
     public static final String TABLE_FINANCE = "Finance";
     public static final String COLUMN_FINANCE_ID = "id";
     public static final String COLUMN_FINANCE_USER_ID = "user_id";

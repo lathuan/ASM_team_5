@@ -61,6 +61,17 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
+        <TextView
+            android:id="@+id/btn_delete_history"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Xóa đã chọn"
+            android:textColor="@android:color/white"
+            android:gravity="center"
+            android:padding="12dp"
+            android:background="#D32F2F"
+            android:layout_marginBottom="16dp"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_expenses"
             android:layout_width="match_parent"

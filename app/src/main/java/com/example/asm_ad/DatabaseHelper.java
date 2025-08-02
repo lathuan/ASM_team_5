@@ -349,7 +349,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    // Thêm phương thức quản lý cài đặt
+    // Thêm phương thức quản lý thời gian thực cho biểu đồ
+    public double[] getWeeklyExpensesRealTime(int userId) {
+        double[] weeklyExpenses = new double[4]; // Tuần gần nhất đến 4 tuần trước
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "SELECT strftime('%W', " + COLUMN_EXPENSE_DATE + ") AS week, " +
+                "SUM(" + COLUMN_EXPENSE_AMOUNT + ") as total " +
+                "FROM " + TABLE_EXPENSE + " " +
+                "WHERE " + COLUMN_EXPENSE_USER_ID + " = ? " +
+                "GROUP BY week " +
+                "ORDER BY week DESC " +
+                "LIMIT 4";
+
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
+
+        int index = 3; // Hiển thị theo thứ tự: Tuần cũ -> mới
+        if (cursor.moveToFirst()) {
+            do {
+                double sum = cursor.getDouble(1);
+                if (index >= 0) {
+                    weeklyExpenses[index] = sum;
+                    index--;
+                }
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return weeklyExpenses;
+    }
 
 
 

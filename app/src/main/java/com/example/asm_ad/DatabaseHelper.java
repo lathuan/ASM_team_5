@@ -260,6 +260,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return balance;
     }
 
+    // T, thêm phương thức mới
+    public Cursor getCategoriesByUserId(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT " + COLUMN_CATEGORY_ID + ", " + COLUMN_CATEGORY_NAME +
+                " FROM " + TABLE_CATEGORY +
+                " WHERE " + COLUMN_CATEGORY_USER_ID + " = ? ORDER BY " + COLUMN_CATEGORY_NAME;
+        return db.rawQuery(query, new String[]{String.valueOf(userId)});
+    }
+
     public double getUserTotalExpense(int userId) {
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "SELECT " + COLUMN_FINANCE_TOTAL_EXPENSE + " FROM " + TABLE_FINANCE +

@@ -2,16 +2,23 @@ package com.example.asm_ad;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,15 +27,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -256,74 +266,148 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+
+        SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
+        String userIdStr = prefs.getString("userId", null);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Chọn hành động");
 
         final String[] options = {"Thêm số dư", "Thêm chi tiêu"};
         builder.setItems(options, (dialog, which) -> {
-            final EditText input = new EditText(this);
-            input.setInputType(InputType.TYPE_CLASS_NUMBER);
-            input.setHint(which == 0 ? "Nhập số tiền để thêm (VND)" : "Nhập số tiền chi tiêu (VND)");
-            AlertDialog.Builder inputBuilder = new AlertDialog.Builder(this);
-            inputBuilder.setTitle(options[which]);
-            inputBuilder.setView(input);
+            if (which == 0) { // Thêm số dư
+                final EditText input = new EditText(this);
+                input.setInputType(InputType.TYPE_CLASS_NUMBER);
+                input.setHint("Nhập số tiền để thêm (VND)");
+                AlertDialog.Builder inputBuilder = new AlertDialog.Builder(this);
+                inputBuilder.setTitle(options[which]);
+                inputBuilder.setView(input);
 
-            inputBuilder.setPositiveButton("Xác nhận", (innerDialog, innerWhich) -> {
-                String amountStr = input.getText().toString().trim();
-                if (!amountStr.isEmpty()) {
-                    try {
-                        double amount = Double.parseDouble(amountStr);
-                        if (amount > 0) {
-                            SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
-                            String userIdStr = prefs.getString("userId", null);
-                            if (userIdStr == null) {
-                                Toast.makeText(MainActivity.this, "Lỗi: Không tìm thấy người dùng", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                            int userId = Integer.parseInt(userIdStr);
+                inputBuilder.setPositiveButton("Xác nhận", (innerDialog, innerWhich) -> {
+                    String amountStr = input.getText().toString().trim();
+                    if (!amountStr.isEmpty()) {
+                        try {
+                            double amount = Double.parseDouble(amountStr);
+                            if (amount > 0 && userIdStr != null) {
+                                int userId = Integer.parseInt(userIdStr);
 
-                            DatabaseHelper dbHelper = new DatabaseHelper(MainActivity.this);
-                            double currentBalance = dbHelper.getUserBalance(userId);
-                            double currentExpense = dbHelper.getUserTotalExpense(userId);
-                            String actionMessage = "";
-
-                            if (which == 0) { // Thêm số dư
+                                DatabaseHelper dbHelper = new DatabaseHelper(MainActivity.this);
+                                double currentBalance = dbHelper.getUserBalance(userId);
                                 double newBalance = currentBalance + amount;
                                 dbHelper.updateUserBalance(userId, newBalance);
                                 // Lưu lịch sử thu nhập
                                 saveIncomeToHistory(userId, amount, "Thêm số dư từ trang chủ", getCurrentDateTime());
-                                actionMessage = "Đã thêm " + String.format("%,.0f VND", amount) + " vào số dư";
-                            } else { // Thêm chi tiêu
+                                String actionMessage = "Đã thêm " + String.format("%,.0f VND", amount) + " vào số dư";
+
+                                refreshCurrentFragment();
+                                addNotification(actionMessage);
+                                Toast.makeText(MainActivity.this, actionMessage, Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(MainActivity.this, "Số tiền phải lớn hơn 0", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (NumberFormatException e) {
+                            Toast.makeText(MainActivity.this, "Vui lòng nhập số hợp lệ", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(MainActivity.this, "Vui lòng nhập số tiền", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                inputBuilder.setNegativeButton("Hủy", (innerDialog, innerWhich) -> innerDialog.cancel());
+                inputBuilder.show();
+            } else { // Thêm chi tiêu
+                LayoutInflater inflater = getLayoutInflater();
+                View dialogView = inflater.inflate(R.layout.dialog_add_expense, null);
+
+
+                EditText etAmount = dialogView.findViewById(R.id.et_amount);
+                EditText etDescription = dialogView.findViewById(R.id.et_description);
+                EditText etDate = dialogView.findViewById(R.id.et_date);
+
+                Button btnCancel = dialogView.findViewById(R.id.btn_cancel);
+                Button btnConfirm = dialogView.findViewById(R.id.btn_confirm);
+
+                // Đặt ngày giờ hiện tại làm giá trị mặc định
+                String currentDateTime = getCurrentDateTime();
+                etDate.setText(currentDateTime);
+
+                List<String> categoryNames = new ArrayList<>();
+                final List<Integer> categoryIds = new ArrayList<>();
+                if (userIdStr != null) {
+                    int userId = Integer.parseInt(userIdStr);
+                    DatabaseHelper dbHelper = new DatabaseHelper(this);
+                    Cursor cursor = dbHelper.getCategoriesByUserId(userId);
+                    if (cursor.moveToFirst()) {
+                        do {
+                            categoryNames.add(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_CATEGORY_NAME)));
+                            categoryIds.add(cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_CATEGORY_ID)));
+                        } while (cursor.moveToNext());
+                    }
+                    cursor.close();
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categoryNames);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                }
+
+                AlertDialog expenseDialog = builder.setView(dialogView).create();
+
+                btnCancel.setOnClickListener(v -> expenseDialog.dismiss());
+                btnConfirm.setOnClickListener(v -> {
+                    String amountStr = etAmount.getText().toString().trim();
+                    String description = etDescription.getText().toString().trim();
+                    String date = etDate.getText().toString().trim();
+
+                    if ( !amountStr.isEmpty() && !date.isEmpty() && userIdStr != null) {
+                        try {
+                            double amount = Double.parseDouble(amountStr);
+                            if (amount > 0) {
+                                int userId = Integer.parseInt(userIdStr);
+                                DatabaseHelper dbHelper = new DatabaseHelper(MainActivity.this);
+                                double currentBalance = dbHelper.getUserBalance(userId);
+                                double currentExpense = dbHelper.getUserTotalExpense(userId);
+
                                 if (currentBalance >= amount) {
                                     double newBalance = currentBalance - amount;
                                     double newExpense = currentExpense + amount;
+
+                                    // Lưu chi tiêu vào bảng Expense
+                                    ContentValues values = new ContentValues();
+                                    values.put(DatabaseHelper.COLUMN_EXPENSE_USER_ID, userId);
+
+                                    values.put(DatabaseHelper.COLUMN_EXPENSE_AMOUNT, amount);
+                                    values.put(DatabaseHelper.COLUMN_EXPENSE_DATE, date);
+                                    values.put(DatabaseHelper.COLUMN_EXPENSE_DESCRIPTION, description.isEmpty() ? null : description);
+                                    dbHelper.getWritableDatabase().insert(DatabaseHelper.TABLE_EXPENSE, null, values);
+
+                                    // Cập nhật Finance
                                     dbHelper.updateUserBalance(userId, newBalance);
                                     dbHelper.updateUserExpense(userId, newExpense);
+
                                     // Lưu lịch sử chi tiêu
-                                    saveExpenseToHistory(userId, amount, "Chi tiêu từ trang chủ", getCurrentDateTime());
-                                    actionMessage = "Đã chi tiêu " + String.format("%,.0f VND", amount);
+                                    saveExpenseToHistory(userId, amount, description.isEmpty() ? "Chi tiêu" : description, date);
+                                    String actionMessage = "Đã chi tiêu " + String.format("%,.0f VND", amount);
+
+                                    refreshCurrentFragment();
+                                    addNotification(actionMessage);
+                                    Toast.makeText(MainActivity.this, actionMessage, Toast.LENGTH_SHORT).show();
+                                    expenseDialog.dismiss();
                                 } else {
                                     Toast.makeText(MainActivity.this, "Số dư không đủ để chi tiêu!", Toast.LENGTH_SHORT).show();
-                                    return;
                                 }
+                            } else {
+                                Toast.makeText(MainActivity.this, "Số tiền phải lớn hơn 0", Toast.LENGTH_SHORT).show();
                             }
-
-                            refreshCurrentFragment();
-                            addNotification(actionMessage);
-                            Toast.makeText(MainActivity.this, actionMessage, Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(MainActivity.this, "Số tiền phải lớn hơn 0", Toast.LENGTH_SHORT).show();
+                        } catch (NumberFormatException e) {
+                            Toast.makeText(MainActivity.this, "Vui lòng nhập số tiền hợp lệ", Toast.LENGTH_SHORT).show();
                         }
-                    } catch (NumberFormatException e) {
-                        Toast.makeText(MainActivity.this, "Vui lòng nhập số hợp lệ", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(MainActivity.this, "Vui lòng điền đầy đủ thông tin", Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    Toast.makeText(MainActivity.this, "Vui lòng nhập số tiền", Toast.LENGTH_SHORT).show();
-                }
-            });
+                });
 
-            inputBuilder.setNegativeButton("Hủy", (innerDialog, innerWhich) -> innerDialog.cancel());
-            inputBuilder.show();
+                expenseDialog.show();
+            }
         });
 
         builder.show();
@@ -371,7 +455,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String getCurrentDateTime() {
-        return new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date());
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        return sdf.format(calendar.getTime());
     }
 
     private void handleNavigationItemSelected(int id) {

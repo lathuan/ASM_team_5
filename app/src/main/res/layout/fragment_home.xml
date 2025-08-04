@@ -142,6 +142,14 @@
                 android:textSize="18sp"
                 android:textColor="#333333"
                 android:layout_marginBottom="16dp"/>
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/sparkLineChart"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="#FFFFFF"
+                android:padding="8dp" />
         </LinearLayout>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

@@ -28,6 +28,8 @@
         <activity android:name=".SearchActivity" android:exported="false" />
         <activity android:name=".SettingsActivity"/>
         <activity android:name=".NotificationsActivity" android:exported="false" />
+        <activity android:name=".RecurringExpenseActivity"
+        android:exported="false" />
 
     </application>
     <uses-permission android:name="android.permission.INTERNET"/>

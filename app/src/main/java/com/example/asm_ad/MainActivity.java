@@ -482,8 +482,12 @@ public class MainActivity extends AppCompatActivity {
             if (iconNotifications != null) iconNotifications.performClick();
             return;
         } else if (id == R.id.nav_settings_drawer) {
-            Toast.makeText(this, "Chức năng cài đặt", Toast.LENGTH_SHORT).show();
-            return;
+            // Khởi chạy RecurringExpenseActivity
+            Intent intent = new Intent(MainActivity.this, RecurringExpenseActivity.class);
+            startActivity(intent);
+            // Đóng Navigation Drawer
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return; // Đảm bảo không tiếp tục xử lý fragment
         }
 
         if (fragment != null) {
@@ -492,7 +496,6 @@ public class MainActivity extends AppCompatActivity {
             drawerLayout.closeDrawer(GravityCompat.START, true);
         }
     }
-
     private void showFragment(Fragment fragment) {
         drawerLayout.closeDrawer(GravityCompat.START, true);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

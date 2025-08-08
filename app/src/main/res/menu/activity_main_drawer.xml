@@ -38,7 +38,7 @@
             android:title="Thông Báo" />
         <item
             android:id="@+id/nav_settings_drawer"
-            android:icon="@drawable/settings"
-            android:title="Cài Đặt" />
+            android:icon="@drawable/recurringpayment"
+            android:title="Chi tiêu Định Kỳ" />
     </group>
 </menu>

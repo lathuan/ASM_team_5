@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "UserDatabase.db";
-    public static final int DATABASE_VERSION = 6;
+    public static final int DATABASE_VERSION = 7;
 
     // --- Bảng User ---
     public static final String TABLE_USER = "User";
@@ -128,6 +128,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_USER_CREATED_AT + " TEXT DEFAULT CURRENT_TIMESTAMP, " +
                 "FOREIGN KEY(" + COLUMN_USER_ROLE_ID + ") REFERENCES " + TABLE_ROLE + "(" + COLUMN_ROLE_ID + "))");
 
+        db.execSQL("INSERT INTO " + TABLE_USER + " (" +
+                COLUMN_USER_ROLE_ID + ", " +
+                COLUMN_USER_USERNAME + ", " +
+                COLUMN_USER_PASSWORD + ", " +
+                COLUMN_USER_FULLNAME + ", " +
+                COLUMN_USER_EMAIL + ", " +
+                COLUMN_USER_PHONE +
+                ") VALUES (2, 'admin123', 'admin123', 'Administrator', 'admin@example.com', '0123456789')");
+
+
         // Bảng Income
         db.execSQL("CREATE TABLE " + TABLE_INCOME + " (" +
                 COLUMN_INCOME_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -214,6 +224,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Insert role default
         db.execSQL("INSERT INTO " + TABLE_ROLE + " (" + COLUMN_ROLE_ID + ", " + COLUMN_ROLE_NAME + ") VALUES (1, 'Học sinh')");
         db.execSQL("INSERT INTO " + TABLE_ROLE + " (" + COLUMN_ROLE_ID + ", " + COLUMN_ROLE_NAME + ") VALUES (2, 'Admin')");
+
+
+
+    }
+
+    public Cursor getAllUsers() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT " + COLUMN_USER_ID + ", " +
+                COLUMN_USER_USERNAME + ", " +
+                COLUMN_USER_FULLNAME + ", " +
+                COLUMN_USER_EMAIL + ", " +
+                COLUMN_USER_PHONE + ", " +
+                COLUMN_USER_ROLE_ID +
+                " FROM " + TABLE_USER;
+        return db.rawQuery(query, null);
+    }
+
+    public boolean deleteUser(int userId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int rows = db.delete(TABLE_USER, COLUMN_USER_ID + "=?", new String[]{String.valueOf(userId)});
+        return rows > 0;
+    }
+
+    public boolean updateUser(int userId, String fullName, String email, String phone, int roleId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_USER_FULLNAME, fullName);
+        values.put(COLUMN_USER_EMAIL, email);
+        values.put(COLUMN_USER_PHONE, phone);
+        values.put(COLUMN_USER_ROLE_ID, roleId);
+        int rows = db.update(TABLE_USER, values, COLUMN_USER_ID + "=?", new String[]{String.valueOf(userId)});
+        return rows > 0;
     }
 
 
@@ -427,16 +469,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return totalIncome;
     }
 
-
-
-
     // Thêm phương thức close()
     @Override
     public void close() {
         super.close();
     }
-
-
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_RECURRING_EXPENSE);

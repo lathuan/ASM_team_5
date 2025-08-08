@@ -38,12 +38,6 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(this, "Lỗi: Không tìm thấy Button login", Toast.LENGTH_SHORT).show();
             return;
         }
-//        btnSignin = findViewById(R.id.btnLogin);
-//        if (btnSignin == null) {
-//            Toast.makeText(this, "Lỗi: Không tìm thấy Button signin", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-
         SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
         boolean isLoggedIn = prefs.getBoolean("isLoggedIn", false);
         long lastActiveTime = prefs.getLong("lastActiveTime", 0);
@@ -89,7 +83,8 @@ public class LoginActivity extends AppCompatActivity {
                     DatabaseHelper.COLUMN_USER_ID,
                     DatabaseHelper.COLUMN_USER_EMAIL,
                     DatabaseHelper.COLUMN_USER_FULLNAME,
-                    DatabaseHelper.COLUMN_USER_PHONE
+                    DatabaseHelper.COLUMN_USER_PHONE,
+                    DatabaseHelper.COLUMN_USER_ROLE_ID
             };
 
             String selection = DatabaseHelper.COLUMN_USER_USERNAME + " = ? AND " +
@@ -109,13 +104,18 @@ public class LoginActivity extends AppCompatActivity {
                     int emailIndex = cursor.getColumnIndex(DatabaseHelper.COLUMN_USER_EMAIL);
                     int fullNameIndex = cursor.getColumnIndex(DatabaseHelper.COLUMN_USER_FULLNAME);
                     int phoneIndex = cursor.getColumnIndex(DatabaseHelper.COLUMN_USER_PHONE);
+                    int roleIdIndex = cursor.getColumnIndex(DatabaseHelper.COLUMN_USER_ROLE_ID);
 
                     if (userIdIndex == -1 || phoneIndex == -1) {
                         Toast.makeText(this, "Lỗi: Không tìm thấy cột cần thiết", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-
+                    if (roleIdIndex == -1) {
+                        Toast.makeText(this, "Lỗi: Không tìm thấy cột RoleID", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    int roleId = cursor.getInt(roleIdIndex);
                     int userId = cursor.getInt(userIdIndex);
                     String email = emailIndex != -1 ? cursor.getString(emailIndex) : "";
                     String fullName = fullNameIndex != -1 ? cursor.getString(fullNameIndex) : "";
@@ -137,13 +137,24 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putLong("lastActiveTime", System.currentTimeMillis());
                     editor.putString("notifications", "");
                     editor.putInt("unreadNotifications", 0);
+                    editor.putInt("roleId", roleId);
                     editor.apply();
 
                     Toast.makeText(this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    Intent intent;
+
+                    if (roleId == 2) { // 2 = Admin ✅
+                        intent = new Intent(LoginActivity.this, AdminActivity.class);
+                    } else if (roleId == 1) { // 1 = Học sinh ✅
+                        intent = new Intent(LoginActivity.this, MainActivity.class);
+                    }else { // 2 = Student (hoặc giá trị khác)
+                        intent = new Intent(LoginActivity.this, MainActivity.class);
+                    }
+
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     finish();
+
                 } else {
                     Toast.makeText(this, "Tên đăng nhập hoặc mật khẩu không đúng!", Toast.LENGTH_SHORT).show();
                 }
@@ -152,14 +163,6 @@ public class LoginActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         });
-//        btnSignin.setOnClickListener(v -> {
-//            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-//            try {
-//                startActivity(intent);
-//            } catch (Exception e) {
-//                Toast.makeText(this, "Lỗi: " + e.getMessage(), Toast.LENGTH_LONG).show();
-//            }
-//        });
     }
 
     @Override

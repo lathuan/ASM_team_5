@@ -43,7 +43,7 @@ public class SavingsGoalsFragment extends Fragment {
         calendarView.setOnDateChangeListener((view1, year, month, dayOfMonth) -> {
             String date = dayOfMonth + "/" + (month + 1) + "/" + year;
             String note = notes.getOrDefault(date, "");
-            tvNote.setText(note.isEmpty() ? "Không có ghi chú" : note);
+            tvNote.setText(note.isEmpty() ? "No notes" : note);
 
             // Hiển thị dialog để thêm/sửa ghi chú
             showNoteDialog(date, note);
@@ -54,21 +54,21 @@ public class SavingsGoalsFragment extends Fragment {
 
     private void showNoteDialog(String date, String existingNote) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Ghi chú cho " + date);
+        builder.setTitle("Notes for " + date);
 
         final EditText input = new EditText(requireContext());
         input.setText(existingNote);
         builder.setView(input);
 
-        builder.setPositiveButton("Lưu", (dialog, which) -> {
+        builder.setPositiveButton("Save", (dialog, which) -> {
             String note = input.getText().toString().trim();
             notes.put(date, note);
-            tvNote.setText(note.isEmpty() ? "Không có ghi chú" : note);
+            tvNote.setText(note.isEmpty() ? "No notes" : note);
             saveNotes();
-            Toast.makeText(requireContext(), "Đã lưu ghi chú", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Saved", Toast.LENGTH_SHORT).show();
         });
 
-        builder.setNegativeButton("Hủy", (dialog, which) -> dialog.cancel());
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
         builder.show();
     }
 

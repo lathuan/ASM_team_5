@@ -95,11 +95,11 @@ public class MainActivity extends AppCompatActivity {
                         intent.putExtra("userId", userId);
                         startActivity(intent);
                     } else {
-                        Toast.makeText(MainActivity.this, "Không tìm thấy ID người dùng", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "User ID not found", Toast.LENGTH_SHORT).show();
                         redirectToLogin();
                     }
                 } else {
-                    Toast.makeText(MainActivity.this, "Vui lòng đăng nhập để tìm kiếm", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Please login to search", Toast.LENGTH_SHORT).show();
                     redirectToLogin();
                 }
             });
@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra("notifications", getNotifications());
                     startActivityForResult(intent, NOTIFICATIONS_REQUEST_CODE);
                 } else {
-                    Toast.makeText(MainActivity.this, "Vui lòng đăng nhập để xem thông báo", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Please login to view notifications", Toast.LENGTH_SHORT).show();
                     redirectToLogin();
                 }
             });
@@ -247,7 +247,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateUserInfo() {
         SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
-        String username = prefs.getString("username", "Tên Người Dùng");
+        String username = prefs.getString("username", "UserName");
         String email = prefs.getString("email", "email@example.com");
 
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -262,7 +262,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void showAddBalanceDialog() {
         if (!isUserLoggedIn()) {
-            Toast.makeText(this, "Vui lòng đăng nhập để thêm số dư", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please login to add balance", Toast.LENGTH_SHORT).show();
             redirectToLogin();
             return;
         }
@@ -272,19 +272,19 @@ public class MainActivity extends AppCompatActivity {
         String userIdStr = prefs.getString("userId", null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Chọn hành động");
+        builder.setTitle("Select action");
 
-        final String[] options = {"Thêm số dư", "Thêm chi tiêu"};
+        final String[] options = {"Add balance", "Add expense"};
         builder.setItems(options, (dialog, which) -> {
             if (which == 0) { // Thêm số dư
                 final EditText input = new EditText(this);
                 input.setInputType(InputType.TYPE_CLASS_NUMBER);
-                input.setHint("Nhập số tiền để thêm (VND)");
+                input.setHint("Enter amount to add (VND)");
                 AlertDialog.Builder inputBuilder = new AlertDialog.Builder(this);
                 inputBuilder.setTitle(options[which]);
                 inputBuilder.setView(input);
 
-                inputBuilder.setPositiveButton("Xác nhận", (innerDialog, innerWhich) -> {
+                inputBuilder.setPositiveButton("Confirm", (innerDialog, innerWhich) -> {
                     String amountStr = input.getText().toString().trim();
                     if (!amountStr.isEmpty()) {
                         try {
@@ -297,24 +297,24 @@ public class MainActivity extends AppCompatActivity {
                                 double newBalance = currentBalance + amount;
                                 dbHelper.updateUserBalance(userId, newBalance);
                                 // Lưu lịch sử thu nhập
-                                saveIncomeToHistory(userId, amount, "Thêm số dư từ trang chủ", getCurrentDateTime());
-                                String actionMessage = "Đã thêm " + String.format("%,.0f VND", amount) + " vào số dư";
+                                saveIncomeToHistory(userId, amount, "Add balance from home page", getCurrentDateTime());
+                                String actionMessage = "Added " + String.format("%,.0f VND", amount) + " into balance";
 
                                 refreshCurrentFragment();
                                 addNotification(actionMessage);
                                 Toast.makeText(MainActivity.this, actionMessage, Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(MainActivity.this, "Số tiền phải lớn hơn 0", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, "Amount must be greater than 0", Toast.LENGTH_SHORT).show();
                             }
                         } catch (NumberFormatException e) {
-                            Toast.makeText(MainActivity.this, "Vui lòng nhập số hợp lệ", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "Please enter a valid number", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(MainActivity.this, "Vui lòng nhập số tiền", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Please enter amount", Toast.LENGTH_SHORT).show();
                     }
                 });
 
-                inputBuilder.setNegativeButton("Hủy", (innerDialog, innerWhich) -> innerDialog.cancel());
+                inputBuilder.setNegativeButton("Cancel", (innerDialog, innerWhich) -> innerDialog.cancel());
                 inputBuilder.show();
             } else { // Thêm chi tiêu
                 LayoutInflater inflater = getLayoutInflater();
@@ -386,24 +386,24 @@ public class MainActivity extends AppCompatActivity {
                                     dbHelper.updateUserExpense(userId, newExpense);
 
                                     // Lưu lịch sử chi tiêu
-                                    saveExpenseToHistory(userId, amount, description.isEmpty() ? "Chi tiêu" : description, date);
-                                    String actionMessage = "Đã chi tiêu " + String.format("%,.0f VND", amount);
+                                    saveExpenseToHistory(userId, amount, description.isEmpty() ? "Expense" : description, date);
+                                    String actionMessage = "Spent " + String.format("%,.0f VND", amount);
 
                                     refreshCurrentFragment();
                                     addNotification(actionMessage);
                                     Toast.makeText(MainActivity.this, actionMessage, Toast.LENGTH_SHORT).show();
                                     expenseDialog.dismiss();
                                 } else {
-                                    Toast.makeText(MainActivity.this, "Số dư không đủ để chi tiêu!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MainActivity.this, "Insufficient balance to spend!", Toast.LENGTH_SHORT).show();
                                 }
                             } else {
-                                Toast.makeText(MainActivity.this, "Số tiền phải lớn hơn 0", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, "Amount must be greater than 0", Toast.LENGTH_SHORT).show();
                             }
                         } catch (NumberFormatException e) {
-                            Toast.makeText(MainActivity.this, "Vui lòng nhập số tiền hợp lệ", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "Please enter a valid amount", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(MainActivity.this, "Vui lòng điền đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Please fill in all information", Toast.LENGTH_SHORT).show();
                     }
                 });
 

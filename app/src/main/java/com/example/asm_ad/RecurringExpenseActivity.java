@@ -101,7 +101,7 @@ public class RecurringExpenseActivity extends AppCompatActivity {
 
     private void showAddRecurringExpenseDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Thêm chi tiêu định kỳ");
+        builder.setTitle("Add recurring expenses");
 
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_add_recurring_expense, null);
@@ -115,13 +115,13 @@ public class RecurringExpenseActivity extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         etStartDate.setText(sdf.format(new Date()));
 
-        builder.setPositiveButton("Thêm", (dialog, which) -> {
+        builder.setPositiveButton("Add", (dialog, which) -> {
             String amountStr = etAmount.getText().toString();
             String description = etDescription.getText().toString();
             String startDate = etStartDate.getText().toString();
 
             if (amountStr.isEmpty() || description.isEmpty() || startDate.isEmpty()) {
-                Toast.makeText(this, "Vui lòng điền đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please fill in all information", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -141,17 +141,17 @@ public class RecurringExpenseActivity extends AppCompatActivity {
                 long result = dbHelper.addRecurringExpense(newExpense);
 
                 if (result > 0) {
-                    Toast.makeText(this, "Đã thêm chi tiêu định kỳ!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Added recurring spending!", Toast.LENGTH_SHORT).show();
                     loadRecurringExpenses();
                 } else {
-                    Toast.makeText(this, "Thêm thất bại!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "More failures!", Toast.LENGTH_SHORT).show();
                 }
             } catch (NumberFormatException e) {
-                Toast.makeText(this, "Số tiền không hợp lệ!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Invalid amount!", Toast.LENGTH_SHORT).show();
             }
         });
 
-        builder.setNegativeButton("Hủy", (dialog, which) -> dialog.cancel());
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
 
         builder.show();
     }
@@ -180,12 +180,12 @@ public class RecurringExpenseActivity extends AppCompatActivity {
             ImageButton deleteButton = convertView.findViewById(R.id.item_delete_button);
 
             descriptionTextView.setText(currentExpense.getDescription());
-            frequencyTextView.setText("Tần suất: " + currentExpense.getFrequency());
-            amountTextView.setText("Số tiền: " + String.format("%,.0f VNĐ", currentExpense.getAmount()));
+            frequencyTextView.setText("Frequency: " + currentExpense.getFrequency());
+            amountTextView.setText("Amount: " + String.format("%,.0f VNĐ", currentExpense.getAmount()));
 
             deleteButton.setOnClickListener(v -> {
                 dbHelper.deleteRecurringExpense(currentExpense.getRecurringExpenseId());
-                Toast.makeText(mContext, "Đã xóa chi tiêu: " + currentExpense.getDescription(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "Deleted spending: " + currentExpense.getDescription(), Toast.LENGTH_SHORT).show();
                 loadRecurringExpenses();
             });
 

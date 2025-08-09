@@ -89,12 +89,12 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
         // Kiểm tra email hợp lệ
         if (email.isEmpty()) {
-            tvMessage.setText("Vui lòng nhập email");
+            tvMessage.setText("Please enter email");
             return;
         }
 
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            tvMessage.setText("Email không hợp lệ");
+            tvMessage.setText("Invalid email");
             return;
         }
 
@@ -115,12 +115,12 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 viewFlipper.setDisplayedChild(1); // Chuyển sang bước 2
 
                 // HIỂN THỊ MÃ XÁC NHẬN TRONG THÔNG BÁO
-                tvMessage.setText("Mã xác nhận đã được gửi đến " + email + "\nMã của bạn: " + generatedCode);
+                tvMessage.setText("Verification code has been sent to " + email + "\nYour OTP: " + generatedCode);
 
                 // Bắt đầu đếm ngược gửi lại mã
                 startResendCountdown();
             } else {
-                tvMessage.setText("Email chưa được đăng ký trong hệ thống");
+                tvMessage.setText("Email is not registered in the system");
             }
         }, 1500);
     }
@@ -130,20 +130,20 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         String code = edtVerificationCode.getText().toString().trim();
 
         if (code.isEmpty()) {
-            tvMessage.setText("Vui lòng nhập mã xác nhận");
+            tvMessage.setText("Please enter the confirmation code");
             return;
         }
 
         if (code.length() != 6) {
-            tvMessage.setText("Mã xác nhận phải có 6 chữ số");
+            tvMessage.setText("The confirmation code must be 6 digits long.");
             return;
         }
 
         if (code.equals(generatedCode)) {
             viewFlipper.setDisplayedChild(2); // Chuyển sang bước 3
-            tvMessage.setText("Vui lòng đặt mật khẩu mới");
+            tvMessage.setText("Please set a new password");
         } else {
-            tvMessage.setText("Mã xác nhận không chính xác");
+            tvMessage.setText("Incorrect confirmation code");
         }
     }
 
@@ -152,17 +152,17 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         String confirmPassword = edtConfirmPassword.getText().toString().trim();
 
         if (newPassword.isEmpty()) {
-            tvMessage.setText("Vui lòng nhập mật khẩu mới");
+            tvMessage.setText("Please enter new password");
             return;
         }
 
         if (newPassword.length() <= 8) {
-            tvMessage.setText("Mật khẩu phải lớn hơn 8 ký tự");
+            tvMessage.setText("Password must be greater than 8 characters");
             return;
         }
 
         if (!newPassword.equals(confirmPassword)) {
-            tvMessage.setText("Mật khẩu xác nhận không khớp");
+            tvMessage.setText("Confirmation password does not match");
             return;
         }
 
@@ -174,7 +174,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             progressBar.setVisibility(View.GONE);
 
             if (updateSuccess) {
-                tvMessage.setText("Đặt lại mật khẩu thành công!");
+                tvMessage.setText("Password reset successful!");
 
                 // Quay lại màn hình đăng nhập sau 2 giây
                 new Handler().postDelayed(() -> {
@@ -183,7 +183,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                     finish();
                 }, 2000);
             } else {
-                tvMessage.setText("Đặt lại mật khẩu thất bại! Vui lòng thử lại");
+                tvMessage.setText("Password reset failed! Please try again");
             }
         }, 1500);
     }
@@ -215,7 +215,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         if (resendCountdown > 0) return;
 
         generatedCode = generateRandomCode();
-        tvMessage.setText("Mã xác nhận mới đã được gửi đến " + userEmail);
+        tvMessage.setText("A new confirmation code has been sent " + userEmail);
         startResendCountdown();
     }
 
@@ -228,11 +228,11 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if (resendCountdown > 0) {
-                    tvResendCode.setText("Gửi lại (" + resendCountdown + "s)");
+                    tvResendCode.setText("Resend (" + resendCountdown + "second)");
                     resendCountdown--;
                     handler.postDelayed(this, 1000);
                 } else {
-                    tvResendCode.setText("Gửi lại");
+                    tvResendCode.setText("Resend");
                     tvResendCode.setEnabled(true);
                     tvResendCode.setTextColor(getResources().getColor(R.color.primary_blue));
                 }

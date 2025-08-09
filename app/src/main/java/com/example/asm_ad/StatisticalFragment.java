@@ -55,12 +55,12 @@ public class StatisticalFragment extends Fragment {
                 int userId = Integer.parseInt(userIdStr);
                 double balance = dbHelper.getUserBalance(userId);
                 double totalExpense = dbHelper.getUserTotalExpense(userId);
-                tvBalance.setText(String.format("Số dư: %,.0f VND", balance));
-                tvTotalExpense.setText(String.format("Tổng chi tiêu: %,.0f VND", totalExpense));
+                tvBalance.setText(String.format("Balance: %,.0f VND", balance));
+                tvTotalExpense.setText(String.format("Total expenditure: %,.0f VND", totalExpense));
                 setupBarChart(userId);
             } catch (NumberFormatException e) {
-                tvBalance.setText("Số dư: 0 VND");
-                tvTotalExpense.setText("Tổng chi tiêu: 0 VND");
+                tvBalance.setText("Balance: 0 VND");
+                tvTotalExpense.setText("Total expenditure: 0 VND");
             }
         }
     }
@@ -72,10 +72,10 @@ public class StatisticalFragment extends Fragment {
         double[] weeklyExpenses = getWeeklyExpenses(userId);
         for (int i = 0; i < weeklyExpenses.length; i++) {
             entries.add(new BarEntry(i, (float) weeklyExpenses[i]));
-            labels.add("Tuần " + (i + 1));
+            labels.add("Week " + (i + 1));
         }
 
-        BarDataSet dataSet = new BarDataSet(entries, "Chi tiêu hàng tuần");
+        BarDataSet dataSet = new BarDataSet(entries, "Weekly expenses");
         dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
         BarData data = new BarData(dataSet);
         data.setBarWidth(0.2f);

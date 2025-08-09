@@ -54,14 +54,14 @@ public class IncomeTrackingFragment extends Fragment {
         // Xử lý nút Xóa đã chọn
         btnDeleteSelected.setOnClickListener(v -> {
             if (selectedIncomes.isEmpty() || !selectedIncomes.containsValue(true)) {
-                Toast.makeText(requireContext(), "Vui lòng chọn ít nhất một giao dịch để xóa", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Please select at least one transaction to delete", Toast.LENGTH_SHORT).show();
                 return;
             }
             new AlertDialog.Builder(requireContext())
-                    .setTitle("Xác nhận")
-                    .setMessage("Bạn có chắc muốn xóa các giao dịch đã chọn?")
-                    .setPositiveButton("Có", (dialog, which) -> deleteSelectedIncomes())
-                    .setNegativeButton("Không", null)
+                    .setTitle("Confirm")
+                    .setMessage("Are you sure you want to delete the selected transactions?")
+                    .setPositiveButton("Yes", (dialog, which) -> deleteSelectedIncomes())
+                    .setNegativeButton("No", null)
                     .show();
         });
 
@@ -150,7 +150,7 @@ public class IncomeTrackingFragment extends Fragment {
 
             // Làm mới giao diện
             refreshData();
-            Toast.makeText(requireContext(), "Đã xóa các giao dịch đã chọn", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Selected transactions deleted", Toast.LENGTH_SHORT).show();
         }
     }
 }

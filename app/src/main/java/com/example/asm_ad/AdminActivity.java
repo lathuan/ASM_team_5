@@ -49,7 +49,7 @@ public class AdminActivity extends AppCompatActivity implements UserAdapter.OnUs
 
         // Nút thêm user
         btnAddUser.setOnClickListener(v -> {
-            Toast.makeText(this, "Chức năng thêm người dùng sẽ được cập nhật sau", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Add user function will be updated later", Toast.LENGTH_SHORT).show();
         });
     }
 

@@ -25,17 +25,17 @@ public class LoginActivity extends AppCompatActivity {
         dbHelper = new DatabaseHelper(this);
         edtLoginUN = findViewById(R.id.edtLoginUN);
         if (edtLoginUN == null) {
-            Toast.makeText(this, "Lỗi: Không tìm thấy EditText username", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error: EditText username not found", Toast.LENGTH_SHORT).show();
             return;
         }
         edtLoginPassword = findViewById(R.id.edtLoginPassword);
         if (edtLoginPassword == null) {
-            Toast.makeText(this, "Lỗi: Không tìm thấy EditText password", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error: EditText password not found", Toast.LENGTH_SHORT).show();
             return;
         }
         btnLogin = findViewById(R.id.btnLogin);
         if (btnLogin == null) {
-            Toast.makeText(this, "Lỗi: Không tìm thấy Button login", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error: Login Button not found", Toast.LENGTH_SHORT).show();
             return;
         }
         SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
@@ -74,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
             String password = edtLoginPassword.getText().toString().trim();
 
             if (username.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please enter complete information!", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -107,12 +107,12 @@ public class LoginActivity extends AppCompatActivity {
                     int roleIdIndex = cursor.getColumnIndex(DatabaseHelper.COLUMN_USER_ROLE_ID);
 
                     if (userIdIndex == -1 || phoneIndex == -1) {
-                        Toast.makeText(this, "Lỗi: Không tìm thấy cột cần thiết", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Error: Required column not found", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
                     if (roleIdIndex == -1) {
-                        Toast.makeText(this, "Lỗi: Không tìm thấy cột RoleID", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Error: RoleID column not found", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     int roleId = cursor.getInt(roleIdIndex);
@@ -140,7 +140,7 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putInt("roleId", roleId);
                     editor.apply();
 
-                    Toast.makeText(this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Login success!", Toast.LENGTH_SHORT).show();
                     Intent intent;
 
                     if (roleId == 2) { // 2 = Admin ✅
@@ -156,10 +156,10 @@ public class LoginActivity extends AppCompatActivity {
                     finish();
 
                 } else {
-                    Toast.makeText(this, "Tên đăng nhập hoặc mật khẩu không đúng!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Incorrect username or password!", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                Toast.makeText(this, "Lỗi đăng nhập: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Login error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }
         });

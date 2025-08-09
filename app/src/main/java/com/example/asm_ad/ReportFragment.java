@@ -52,7 +52,7 @@ public class ReportFragment extends Fragment {
     private int userId;
     private String currentStartDate = "";
     private String currentEndDate = "";
-    private String selectedCategory = "Tất cả danh mục";
+    private String selectedCategory = "All categories";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -130,10 +130,10 @@ public class ReportFragment extends Fragment {
     }
 
     private void showTimeFilterDialog() {
-        String[] timeOptions = {"Hôm nay", "Tuần này", "Tháng này", "Quý này", "Năm nay", "Tùy chỉnh"};
+        String[] timeOptions = {"Today", "This Week", "This Month", "This Quarter", "This Year", "Custom"};
 
         new androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                .setTitle("Chọn khoảng thời gian")
+                .setTitle("Select time period")
                 .setItems(timeOptions, (dialog, which) -> {
                     btnTimeFilter.setText(timeOptions[which]);
                     updateDateRange(which);
@@ -188,7 +188,7 @@ public class ReportFragment extends Fragment {
 
             case 5: // Tùy chỉnh
                 // TODO: Triển khai chọn ngày tùy chỉnh
-                Toast.makeText(requireContext(), "Chức năng chọn ngày tùy chỉnh đang phát triển", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Custom date picker functionality is under development", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -198,7 +198,7 @@ public class ReportFragment extends Fragment {
         List<String> categories = getCategoriesFromDatabase();
 
         new androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                .setTitle("Chọn danh mục")
+                .setTitle("Select category")
                 .setItems(categories.toArray(new String[0]), (dialog, which) -> {
                     selectedCategory = categories.get(which);
                     btnCategoryFilter.setText(selectedCategory);
@@ -209,7 +209,7 @@ public class ReportFragment extends Fragment {
 
     private List<String> getCategoriesFromDatabase() {
         List<String> categories = new ArrayList<>();
-        categories.add("Tất cả danh mục");
+        categories.add("All categories");
 
         Cursor cursor = dbHelper.getCategoriesByUserId(userId);
         if (cursor != null) {
@@ -275,14 +275,14 @@ public class ReportFragment extends Fragment {
                 "AND e." + DatabaseHelper.COLUMN_EXPENSE_DATE + " BETWEEN ? AND ?";
 
         // Thêm điều kiện lọc danh mục nếu cần
-        if (!selectedCategory.equals("Tất cả danh mục")) {
+        if (!selectedCategory.equals("All categories")) {
             query += " AND c." + DatabaseHelper.COLUMN_CATEGORY_NAME + " = ?";
         }
 
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String[] params;
 
-        if (!selectedCategory.equals("Tất cả danh mục")) {
+        if (!selectedCategory.equals("All categories")) {
             params = new String[]{
                     String.valueOf(userId),
                     currentStartDate,
@@ -337,7 +337,7 @@ public class ReportFragment extends Fragment {
                 "AND e." + DatabaseHelper.COLUMN_EXPENSE_DATE + " BETWEEN ? AND ?";
 
         // Thêm điều kiện lọc danh mục cho chi tiêu
-        if (!selectedCategory.equals("Tất cả danh mục")) {
+        if (!selectedCategory.equals("All categories")) {
             expenseQuery += " AND c." + DatabaseHelper.COLUMN_CATEGORY_NAME + " = ?";
         }
 
@@ -349,7 +349,7 @@ public class ReportFragment extends Fragment {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String[] params;
 
-        if (!selectedCategory.equals("Tất cả danh mục")) {
+        if (!selectedCategory.equals("All categories")) {
             params = new String[]{
                     String.valueOf(userId), currentStartDate, currentEndDate,
                     String.valueOf(userId), currentStartDate, currentEndDate, selectedCategory
@@ -410,16 +410,16 @@ public class ReportFragment extends Fragment {
 
     private void exportReport() {
         // TODO: Triển khai xuất báo cáo
-        Toast.makeText(requireContext(), "Xuất báo cáo thành công", Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), "Report export successful", Toast.LENGTH_SHORT).show();
     }
 
     private void shareReport() {
         // TODO: Triển khai chia sẻ báo cáo
-        Toast.makeText(requireContext(), "Chia sẻ báo cáo", Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), "Share report", Toast.LENGTH_SHORT).show();
     }
 
     private void openReportSettings() {
         // TODO: Triển khai cài đặt báo cáo
-        Toast.makeText(requireContext(), "Mở cài đặt báo cáo", Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), "Open report settings", Toast.LENGTH_SHORT).show();
     }
 }

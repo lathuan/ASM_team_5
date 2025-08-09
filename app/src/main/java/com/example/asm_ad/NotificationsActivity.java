@@ -36,7 +36,7 @@ public class NotificationsActivity extends AppCompatActivity {
         ImageView btnClose = findViewById(R.id.btn_close);
 
         // Cập nhật số lượng thông báo chưa đọc
-        tvUnreadCount.setText("Thông báo chưa đọc: " + unreadCount);
+        tvUnreadCount.setText("Unread notifications: " + unreadCount);
 
         // Khởi tạo danh sách thông báo từ chuỗi nhận được
         notifications = new ArrayList<>();
@@ -57,7 +57,7 @@ public class NotificationsActivity extends AppCompatActivity {
         listView.setOnItemClickListener((parent, view, position, id) -> {
             if (unreadCount > 0) {
                 unreadCount--;
-                tvUnreadCount.setText("Thông báo chưa đọc: " + unreadCount);
+                tvUnreadCount.setText("Unread notifications: " + unreadCount);
                 notifications.remove(position);
                 adapter.notifyDataSetChanged();
 

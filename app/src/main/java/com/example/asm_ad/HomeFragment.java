@@ -58,7 +58,7 @@ public class HomeFragment extends Fragment {
 
     private void updateUserInfo() {
         SharedPreferences prefs = getActivity().getSharedPreferences("UserSession", Context.MODE_PRIVATE);
-        String username = prefs.getString("username", "Tên Người Dùng");
+        String username = prefs.getString("username", "User name");
         if (tvUsername != null) tvUsername.setText(username);
     }
 
@@ -111,7 +111,7 @@ public class HomeFragment extends Fragment {
                 entries.add(new Entry(i + 1, monthlyExpenses[i]));
             }
 
-            LineDataSet dataSet = new LineDataSet(entries, "Chi tiêu hàng tháng");
+            LineDataSet dataSet = new LineDataSet(entries, "Monthly expenses");
             dataSet.setColor(getResources().getColor(android.R.color.holo_blue_dark));
             dataSet.setLineWidth(2f);
             dataSet.setDrawCircles(true); // Hiển thị điểm trên đường

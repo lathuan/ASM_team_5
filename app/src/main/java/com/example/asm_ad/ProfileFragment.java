@@ -76,7 +76,7 @@ public class ProfileFragment extends Fragment {
 
     private void loadUserInfo() {
         SharedPreferences userPrefs = requireActivity().getSharedPreferences("UserSession", Context.MODE_PRIVATE);
-        String username = userPrefs.getString("username", "Tên người dùng");
+        String username = userPrefs.getString("username", "UserName");
         String email = userPrefs.getString("email", "email@example.com");
         String phone = userPrefs.getString("phone", "0123456789");
 
@@ -90,8 +90,8 @@ public class ProfileFragment extends Fragment {
         PopupMenu popupMenu = new PopupMenu(requireContext(), btnMore);
 
         // Thêm menu items
-        popupMenu.getMenu().add(0, 1, 0, "Xóa tài khoản");
-        popupMenu.getMenu().add(0, 2, 1, "Đăng xuất");
+        popupMenu.getMenu().add(0, 1, 0, "Delete Account");
+        popupMenu.getMenu().add(0, 2, 1, "Logout");
 
         popupMenu.setOnMenuItemClickListener(item -> {
             int id = item.getItemId();
@@ -110,13 +110,13 @@ public class ProfileFragment extends Fragment {
 
     private void deleteAccount() {
         new AlertDialog.Builder(requireContext())
-                .setTitle("Xóa tài khoản")
-                .setMessage("Bạn có chắc chắn muốn xóa tài khoản này?")
-                .setPositiveButton("Xóa", (dialog, which) -> {
+                .setTitle("Delete Account")
+                .setMessage("Are you sure you want to delete this account?")
+                .setPositiveButton("Delete", (dialog, which) -> {
                     // Xử lý xóa tài khoản
                     deleteAccountFromDatabase();
                 })
-                .setNegativeButton("Hủy", null)
+                .setNegativeButton("Cancel", null)
                 .show();
     }
 
@@ -132,19 +132,19 @@ public class ProfileFragment extends Fragment {
                 if (success) {
                     // Đăng xuất sau khi xóa
                     logout();
-                    Toast.makeText(requireContext(), "Tài khoản đã được xóa thành công", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Account deleted successfully", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(requireContext(), "Xóa tài khoản thất bại", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Account deletion failed", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                Toast.makeText(requireContext(), "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
     }
 
     private void showEditProfileDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Chỉnh sửa hồ sơ");
+        builder.setTitle("Edit profile");
 
         View view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_edit_profile, null);
         EditText edtFullName = view.findViewById(R.id.edtFullName);
@@ -158,7 +158,7 @@ public class ProfileFragment extends Fragment {
         edtPhone.setText(prefs.getString("phone", ""));
 
         builder.setView(view);
-        builder.setPositiveButton("Lưu", (dialog, which) -> {
+        builder.setPositiveButton("Save", (dialog, which) -> {
             String newFullName = edtFullName.getText().toString();
             String newEmail = edtEmail.getText().toString();
             String newPhone = edtPhone.getText().toString();
@@ -166,7 +166,7 @@ public class ProfileFragment extends Fragment {
             updateUserProfile(newFullName, newEmail, newPhone);
         });
 
-        builder.setNegativeButton("Hủy", null);
+        builder.setNegativeButton("Cancel", null);
         builder.show();
     }
 
@@ -194,9 +194,9 @@ public class ProfileFragment extends Fragment {
 
                 // Cập nhật UI
                 loadUserInfo();
-                Toast.makeText(requireContext(), "Cập nhật hồ sơ thành công", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Profile update successful", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(requireContext(), "Cập nhật hồ sơ thất bại", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Profile update failed", Toast.LENGTH_SHORT).show();
             }
         }
     }

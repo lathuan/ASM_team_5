@@ -44,32 +44,32 @@ public class RegisterActivity extends AppCompatActivity {
             String password = edtPassword.getText().toString().trim();
 
             if (username.isEmpty() || fullName.isEmpty() || email.isEmpty() || phone.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please enter complete information!", Toast.LENGTH_SHORT).show();
                 return;
             }
 
             if (username.length() < 3) {
-                edtUN.setError("Tên đăng nhập phải có ít nhất 3 ký tự!");
+                edtUN.setError("Username must be at least 3 characters!");
                 return;
             }
 
             if (fullName.matches(".*\\d.*")) {
-                edtFN.setError("Họ và tên không được chứa số!");
+                edtFN.setError("Full name cannot contain numbers!");
                 return;
             }
 
             if (!email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
-                emailText.setError("Email không hợp lệ!");
+                emailText.setError("Invalid email!");
                 return;
             }
 
             if (!phone.matches("^[0-9]{10}$")) {
-                phoneText.setError("Số điện thoại phải có 10 chữ số!");
+                phoneText.setError("Phone number must be 10 digits!");
                 return;
             }
 
             if (password.length() <= 8) {
-                edtPassword.setError("Mật khẩu phải lớn hơn 8 ký tự!");
+                edtPassword.setError("Password must be greater than 8 characters!");
                 return;
             }
 
@@ -87,17 +87,17 @@ public class RegisterActivity extends AppCompatActivity {
                 Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                 int newUserId = (int) newRowId;
                 dbHelper.addFinanceRecord(newUserId);
-                Toast.makeText(this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show();
 
 
                 try {
                     startActivity(intent);
                     finish();
                 } catch (Exception e) {
-                    Toast.makeText(this, "Lỗi: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             } else {
-                Toast.makeText(this, "Đăng ký thất bại! Tên đăng nhập đã tồn tại.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Registration failed! Username already exists.", Toast.LENGTH_SHORT).show();
             }
         });
     }

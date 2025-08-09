@@ -14,7 +14,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Theo dõi chi tiêu"
+            android:text="Expense Tracking"
             android:textColor="#1A237E"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -36,7 +36,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Tổng chi tiêu tháng này"
+                    android:text="Total Expenses This Month"
                     android:textColor="#E0E0E0"
                     android:textSize="16sp"/>
 
@@ -65,7 +65,7 @@
             android:id="@+id/btn_delete_history"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Xóa đã chọn"
+            android:text="Delete Selected"
             android:textColor="@android:color/white"
             android:gravity="center"
             android:padding="12dp"

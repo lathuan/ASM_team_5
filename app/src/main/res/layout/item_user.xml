@@ -20,7 +20,7 @@
                 android:id="@+id/tvItemUsername"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="username"
+                android:text="Username"
                 android:textStyle="bold" />
 
             <TextView
@@ -57,13 +57,13 @@
                 android:id="@+id/btnEditUser"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sửa" />
+                android:text="Edit" />
 
             <Button
                 android:id="@+id/btnDeleteUser"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Xóa"
+                android:text="Delete"
                 android:layout_marginTop="6dp" />
         </LinearLayout>
     </LinearLayout>

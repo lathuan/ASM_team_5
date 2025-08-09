@@ -8,12 +8,12 @@
     android:background="@drawable/gradient_background_login"
     android:padding="24dp">
 
-    <!-- Tiêu đề -->
+    <!-- Title -->
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Tạo tài khoản"
+        android:text="Create Account"
         android:textColor="@color/white"
         android:textSize="28sp"
         android:textStyle="bold"
@@ -22,7 +22,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Tên đăng nhập -->
+    <!-- Username -->
     <LinearLayout
         android:id="@+id/usernameLayout"
         android:layout_width="match_parent"
@@ -51,10 +51,10 @@
             android:background="@null"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
-            android:hint="Tên đăng nhập"/>
+            android:hint="Username"/>
     </LinearLayout>
 
-    <!-- Họ và tên -->
+    <!-- Full Name -->
     <LinearLayout
         android:id="@+id/fullnameLayout"
         android:layout_width="match_parent"
@@ -83,7 +83,7 @@
             android:background="@null"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
-            android:hint="Họ và tên"/>
+            android:hint="Full Name"/>
     </LinearLayout>
 
     <!-- Email -->
@@ -118,7 +118,7 @@
             android:hint="Email"/>
     </LinearLayout>
 
-    <!-- Số điện thoại -->
+    <!-- Phone Number -->
     <LinearLayout
         android:id="@+id/phoneLayout"
         android:layout_width="match_parent"
@@ -147,10 +147,10 @@
             android:background="@null"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
-            android:hint="Số điện thoại"/>
+            android:hint="Phone Number"/>
     </LinearLayout>
 
-    <!-- Mật khẩu -->
+    <!-- Password -->
     <LinearLayout
         android:id="@+id/passwordLayout"
         android:layout_width="match_parent"
@@ -179,17 +179,17 @@
             android:background="@null"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
-            android:hint="Mật khẩu"/>
+            android:hint="Password"/>
     </LinearLayout>
 
-    <!-- Nút đăng ký -->
+    <!-- Sign Up Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnRegister"
         android:layout_width="0dp"
         android:layout_height="55dp"
         android:layout_marginTop="32dp"
         android:backgroundTint="@color/primary_blue"
-        android:text="Đăng ký"
+        android:text="Sign Up"
         android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -202,13 +202,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/passwordLayout" />
 
-    <!-- Đã có tài khoản -->
+    <!-- Already have an account -->
     <TextView
         android:id="@+id/tvLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Đã có tài khoản? Đăng nhập"
+        android:text="Already have an account? Sign In"
         android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="italic"

@@ -6,9 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F5F7FB">
-<!--    tools:context=".fragments.ReportFragment"-->
+    <!--    tools:context=".fragments.ReportFragment"-->
 
-    <!-- App Bar với các tùy chọn lọc -->
+    <!-- App Bar with filter options -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,7 +19,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:title="Báo cáo tài chính"
+            app:title="Financial Report"
             app:titleTextColor="#1A237E"
             app:menu="@menu/report_menu"/>
 
@@ -30,19 +30,19 @@
             android:orientation="horizontal"
             android:background="#F5F7FB">
 
-            <!-- Lọc theo thời gian -->
+            <!-- Time Filter -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnTimeFilter"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Tháng này"
+                android:text="This Month"
                 app:icon="@drawable/calendar"
                 app:iconTint="#1A237E"
                 app:strokeColor="#1A237E"/>
 
-            <!-- Lọc theo danh mục -->
+            <!-- Category Filter -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCategoryFilter"
                 style="@style/Widget.Material3.Button.OutlinedButton"
@@ -50,14 +50,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="8dp"
-                android:text="Tất cả danh mục"
+                android:text="All Categories"
                 app:icon="@drawable/category"
                 app:iconTint="#1A237E"
                 app:strokeColor="#1A237E"/>
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Nội dung chính có thể cuộn -->
+    <!-- Main scrollable content -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -69,7 +69,7 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Tổng quan tài chính -->
+            <!-- Financial Overview -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -94,7 +94,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Tổng thu"
+                            android:text="Total Income"
                             android:textColor="#6E6E6E"
                             android:textSize="14sp"/>
 
@@ -102,7 +102,7 @@
                             android:id="@+id/tvTotalIncome"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="5.200.000 ₫"
+                            android:text="5,200,000 ₫"
                             android:textColor="#4CAF50"
                             android:textSize="18sp"
                             android:textStyle="bold"
@@ -129,7 +129,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Tổng chi"
+                            android:text="Total Expenses"
                             android:textColor="#6E6E6E"
                             android:textSize="14sp"/>
 
@@ -137,7 +137,7 @@
                             android:id="@+id/tvTotalExpense"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="3.750.000 ₫"
+                            android:text="3,750,000 ₫"
                             android:textColor="#F44336"
                             android:textSize="18sp"
                             android:textStyle="bold"
@@ -163,7 +163,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Tiết kiệm"
+                            android:text="Savings"
                             android:textColor="#6E6E6E"
                             android:textSize="14sp"/>
 
@@ -171,7 +171,7 @@
                             android:id="@+id/tvTotalSavings"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="1.450.000 ₫"
+                            android:text="1,450,000 ₫"
                             android:textColor="#2196F3"
                             android:textSize="18sp"
                             android:textStyle="bold"
@@ -180,7 +180,7 @@
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
-            <!-- Biểu đồ phân bổ chi tiêu -->
+            <!-- Spending Allocation Chart -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
@@ -196,7 +196,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Phân bổ chi tiêu"
+                        android:text="Spending Allocation"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:layout_margin="16dp"/>
@@ -209,7 +209,7 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Bảng dữ liệu chi tiết -->
+            <!-- Detailed Transaction Table -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -226,12 +226,12 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Chi tiết giao dịch"
+                        android:text="Transaction Details"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="12dp"/>
 
-                    <!-- Header của bảng -->
+                    <!-- Table Header -->
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -242,7 +242,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="2"
-                            android:text="Danh mục"
+                            android:text="Category"
                             android:textColor="@android:color/white"
                             android:paddingStart="16dp"
                             android:textStyle="bold"/>
@@ -251,7 +251,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1.5"
-                            android:text="Số tiền"
+                            android:text="Amount"
                             android:textColor="@android:color/white"
                             android:textAlignment="textEnd"
                             android:textStyle="bold"/>
@@ -260,14 +260,14 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Ngày"
+                            android:text="Date"
                             android:textColor="@android:color/white"
                             android:paddingEnd="16dp"
                             android:textAlignment="textEnd"
                             android:textStyle="bold"/>
                     </TableRow>
 
-                    <!-- Dữ liệu bảng sẽ được thêm động -->
+                    <!-- Table data will be added dynamically -->
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recyclerViewTransactions"
                         android:layout_width="match_parent"
@@ -276,14 +276,14 @@
                         android:scrollbars="vertical"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
-                    <!-- Nút xuất báo cáo -->
+                    <!-- Export Report Button -->
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnExportReport"
                         style="@style/Widget.Material3.Button.OutlinedButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:text="Xuất báo cáo"
+                        android:text="Export Report"
                         app:icon="@drawable/export"
                         app:iconTint="#1A237E"
                         app:strokeColor="#1A237E"/>

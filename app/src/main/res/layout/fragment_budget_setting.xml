@@ -14,7 +14,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Cài đặt ngân sách"
+            android:text="Budget Settings"
             android:textColor="#1A237E"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -36,7 +36,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Ngân sách hiện tại"
+                    android:text="Current Budget"
                     android:textSize="16sp"
                     android:textColor="#6E6E6E"/>
 
@@ -64,7 +64,7 @@
         <com.google.android.material.button.MaterialButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Thiết lập ngân sách mới"
+            android:text="Set New Budget"
             android:textColor="@android:color/white"
             app:icon="@drawable/settings"
             app:iconTint="@android:color/white"
@@ -76,13 +76,13 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Danh mục ngân sách"
+            android:text="Budget Categories"
             android:textColor="#333333"
             android:textSize="18sp"
             android:textStyle="bold"
             android:layout_marginBottom="8dp"/>
 
-        <!-- RecyclerView cho danh sách danh mục -->
+        <!-- RecyclerView for category list -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_budget_categories"
             android:layout_width="match_parent"

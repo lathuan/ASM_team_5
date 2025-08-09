@@ -22,7 +22,7 @@
                 android:id="@+id/tvWelcome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Chào mừng,"
+                android:text="Welcome,"
                 android:textColor="#6E6E6E"
                 android:textSize="16sp" />
 
@@ -30,7 +30,7 @@
                 android:id="@+id/tvUsername"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tên Người Dùng"
+                android:text="Username"
                 android:textColor="#1A237E"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -52,7 +52,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Số dư tổng cộng"
+                    android:text="Total Balance"
                     android:textColor="#E0E0E0"
                     android:textSize="14sp"/>
 
@@ -60,7 +60,7 @@
                     android:id="@+id/tvBalance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="1.234.567 VND"
+                    android:text="1,234,567 VND"
                     android:textColor="@android:color/white"
                     android:textSize="32sp"
                     android:textStyle="bold"
@@ -81,7 +81,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Thu nhập"
+                            android:text="Income"
                             android:textColor="#C8E6C9"
                             android:textSize="12sp"/>
 
@@ -89,7 +89,7 @@
                             android:id="@+id/tvTotalIncome"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="500.000 VND"
+                            android:text="0 VND"
                             android:textColor="@android:color/white"
                             android:textSize="16sp"
                             android:textStyle="bold"/>
@@ -110,7 +110,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Chi tiêu"
+                            android:text="Expenses"
                             android:textColor="#FFCDD2"
                             android:textSize="12sp"/>
 
@@ -118,7 +118,7 @@
                             android:id="@+id/tvTotalExpense"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="200.000 VND"
+                            android:text="200,000 VND"
                             android:textColor="@android:color/white"
                             android:textStyle="bold"/>
                     </LinearLayout>
@@ -137,11 +137,19 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Biểu đồ chi tiêu hàng tháng"
+                android:text="Monthly Spending Chart"
                 android:textStyle="bold"
                 android:textSize="18sp"
                 android:textColor="#333333"
                 android:layout_marginBottom="16dp"/>
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/sparkLineChart"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="#FFFFFF"
+                android:padding="8dp" />
         </LinearLayout>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

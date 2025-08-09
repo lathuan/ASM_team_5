@@ -3,7 +3,9 @@ package com.example.asm_ad;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -31,9 +33,10 @@ public class NotificationsActivity extends AppCompatActivity {
         // Khởi tạo giao diện
         tvUnreadCount = findViewById(R.id.tv_unread_count);
         listView = findViewById(R.id.list_view);
+        ImageView btnClose = findViewById(R.id.btn_close);
 
         // Cập nhật số lượng thông báo chưa đọc
-        tvUnreadCount.setText("Thông báo chưa đọc: " + unreadCount);
+        tvUnreadCount.setText("Unread notifications: " + unreadCount);
 
         // Khởi tạo danh sách thông báo từ chuỗi nhận được
         notifications = new ArrayList<>();
@@ -46,15 +49,15 @@ public class NotificationsActivity extends AppCompatActivity {
             }
         }
 
-        // Thiết lập adapter cho ListView
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, notifications);
+        // Thiết lập adapter cho ListView với custom layout
+        adapter = new ArrayAdapter<>(this, R.layout.notification_item, R.id.tv_notification, notifications);
         listView.setAdapter(adapter);
 
         // Xử lý khi nhấn vào thông báo (đánh dấu đã đọc)
         listView.setOnItemClickListener((parent, view, position, id) -> {
             if (unreadCount > 0) {
                 unreadCount--;
-                tvUnreadCount.setText("Thông báo chưa đọc: " + unreadCount);
+                tvUnreadCount.setText("Unread notifications: " + unreadCount);
                 notifications.remove(position);
                 adapter.notifyDataSetChanged();
 
@@ -65,5 +68,8 @@ public class NotificationsActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        // Xử lý nút Đóng
+        btnClose.setOnClickListener(v -> finish());
     }
 }

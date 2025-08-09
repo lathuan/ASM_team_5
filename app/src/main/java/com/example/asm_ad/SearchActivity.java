@@ -25,7 +25,7 @@ public class SearchActivity extends AppCompatActivity {
         // Lấy userId từ Intent
         String userId = getIntent().getStringExtra("userId");
         if (userId == null) {
-            Toast.makeText(this, "Không tìm thấy ID người dùng", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "User ID not found", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -36,9 +36,9 @@ public class SearchActivity extends AppCompatActivity {
 
         // Khởi tạo danh sách chi tiêu giả lập (thay bằng dữ liệu thực tế)
         expenseList = new ArrayList<>();
-        expenseList.add("Chi tiêu: Ăn uống - 500.000 VND - 07/31/2025");
-        expenseList.add("Chi tiêu: Mua sắm - 1.000.000 VND - 07/30/2025");
-        expenseList.add("Chi tiêu: Tiền nhà - 3.000.000 VND - 07/29/2025");
+        expenseList.add("Spending: Food and Drink - 500,000 VND - 07/31/2025");
+        expenseList.add("Spending: Shopping - 1,000,000 VND - 07/30/2025");
+        expenseList.add("Expenses: Housing - 3,000,000 VND - 07/29/2025");
 
         // Thiết lập adapter cho ListView
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, expenseList);
@@ -48,7 +48,7 @@ public class SearchActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(SearchActivity.this, "Tìm kiếm: " + query, Toast.LENGTH_SHORT).show();
+                Toast.makeText(SearchActivity.this, "Search: " + query, Toast.LENGTH_SHORT).show();
                 return true;
             }
 

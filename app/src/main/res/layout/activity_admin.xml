@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/bg_gradient">
+
+    <!-- Title with rounded background and shadow -->
+    <TextView
+        android:id="@+id/tvAdminTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="User Account Management"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:paddingVertical="16dp"
+        android:textColor="@android:color/white"
+        android:background="@drawable/bg_header"
+        android:elevation="8dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="50dp"/>
+
+    <!-- RecyclerView with divider and shadow -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvUserList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_card"
+        android:padding="4dp"
+        android:elevation="4dp"
+        android:outlineProvider="bounds"
+        android:clipToPadding="false"
+        app:divider="@color/divider_color"/>
+
+    <!-- Add user button -->
+    <Button
+        android:id="@+id/btnAddUser"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="Add User"
+        android:textSize="16sp"
+        android:textColor="@android:color/white"
+        android:backgroundTint="#FF4CAF50"
+        android:drawableStart="@drawable/add"
+        android:drawablePadding="8dp"
+        android:padding="8dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="sans-serif-medium"/>
+
+    <!-- Logout button -->
+    <Button
+        android:id="@+id/btnBackToLogin"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="Logout"
+        android:textSize="16sp"
+        android:textColor="@android:color/white"
+        android:backgroundTint="#FFE91E63"
+        android:drawableStart="@drawable/logout"
+        android:drawablePadding="8dp"
+        android:padding="8dp"
+        android:layout_marginTop="12dp"
+        android:fontFamily="sans-serif-medium"/>
+</LinearLayout>

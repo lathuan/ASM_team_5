@@ -1,12 +1,14 @@
 package com.example.asm_ad;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "UserDatabase.db";
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 8;
 
     // --- Bảng User ---
     public static final String TABLE_USER = "User";
@@ -87,6 +89,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_RECURRING_START = "StartDate";
     public static final String COLUMN_RECURRING_END = "EndDate";
     public static final String COLUMN_RECURRING_DESCRIPTION = "Description";
+    // 10,Thêm vào các constant
+    public static final String TABLE_FINANCE = "Finance";
+    public static final String COLUMN_FINANCE_ID = "id";
+    public static final String COLUMN_FINANCE_USER_ID = "user_id";
+    public static final String COLUMN_FINANCE_BALANCE = "balance";
+    public static final String COLUMN_FINANCE_TOTAL_EXPENSE = "total_expense";
+
+    // Thêm vào các constant
+//    public static final String TABLE_SETTINGS = "Settings";
+//    public static final String COLUMN_SETTINGS_ID = "id";
+//    public static final String COLUMN_SETTINGS_USER_ID = "user_id";
+//    public static final String COLUMN_SETTINGS_DARK_MODE = "dark_mode";
+//    public static final String COLUMN_SETTINGS_NOTIFICATIONS = "notifications";
+//    public static final String COLUMN_SETTINGS_NOTIFICATION_SOUND = "notification_sound";
+
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -110,6 +127,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_USER_PHONE + " TEXT NOT NULL, " +
                 COLUMN_USER_CREATED_AT + " TEXT DEFAULT CURRENT_TIMESTAMP, " +
                 "FOREIGN KEY(" + COLUMN_USER_ROLE_ID + ") REFERENCES " + TABLE_ROLE + "(" + COLUMN_ROLE_ID + "))");
+
+        db.execSQL("INSERT INTO " + TABLE_USER + " (" +
+                COLUMN_USER_ROLE_ID + ", " +
+                COLUMN_USER_USERNAME + ", " +
+                COLUMN_USER_PASSWORD + ", " +
+                COLUMN_USER_FULLNAME + ", " +
+                COLUMN_USER_EMAIL + ", " +
+                COLUMN_USER_PHONE +
+                ") VALUES (2, 'admin123', 'admin123', 'Administrator', 'admin@example.com', '0123456789')");
+
 
         // Bảng Income
         db.execSQL("CREATE TABLE " + TABLE_INCOME + " (" +
@@ -185,11 +212,290 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "FOREIGN KEY(" + COLUMN_RECURRING_USER_ID + ") REFERENCES " + TABLE_USER + "(" + COLUMN_USER_ID + "), " +
                 "FOREIGN KEY(" + COLUMN_RECURRING_CATEGORY_ID + ") REFERENCES " + TABLE_CATEGORY + "(" + COLUMN_CATEGORY_ID + "))");
 
+        //FINANCE
+        db.execSQL("CREATE TABLE " + TABLE_FINANCE + " (" +
+                COLUMN_FINANCE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUMN_FINANCE_USER_ID + " INTEGER NOT NULL UNIQUE, " +
+                COLUMN_FINANCE_BALANCE + " REAL DEFAULT 0, " +
+                COLUMN_FINANCE_TOTAL_EXPENSE + " REAL DEFAULT 0, " +
+                "FOREIGN KEY(" + COLUMN_FINANCE_USER_ID + ") REFERENCES " + TABLE_USER + "(" + COLUMN_USER_ID + "))");
+
+
         // Insert role default
         db.execSQL("INSERT INTO " + TABLE_ROLE + " (" + COLUMN_ROLE_ID + ", " + COLUMN_ROLE_NAME + ") VALUES (1, 'Học sinh')");
         db.execSQL("INSERT INTO " + TABLE_ROLE + " (" + COLUMN_ROLE_ID + ", " + COLUMN_ROLE_NAME + ") VALUES (2, 'Admin')");
+
+
+
     }
 
+    public Cursor getAllUsers() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT " + COLUMN_USER_ID + ", " +
+                COLUMN_USER_USERNAME + ", " +
+                COLUMN_USER_FULLNAME + ", " +
+                COLUMN_USER_EMAIL + ", " +
+                COLUMN_USER_PHONE + ", " +
+                COLUMN_USER_ROLE_ID +
+                " FROM " + TABLE_USER;
+        return db.rawQuery(query, null);
+    }
+
+    public boolean deleteUser(int userId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int rows = db.delete(TABLE_USER, COLUMN_USER_ID + "=?", new String[]{String.valueOf(userId)});
+        return rows > 0;
+    }
+
+    public boolean updateUser(int userId, String fullName, String email, String phone, int roleId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_USER_FULLNAME, fullName);
+        values.put(COLUMN_USER_EMAIL, email);
+        values.put(COLUMN_USER_PHONE, phone);
+        values.put(COLUMN_USER_ROLE_ID, roleId);
+        int rows = db.update(TABLE_USER, values, COLUMN_USER_ID + "=?", new String[]{String.valueOf(userId)});
+        return rows > 0;
+    }
+
+
+    public long addFinanceRecord(int userId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_FINANCE_USER_ID, userId);
+        values.put(COLUMN_FINANCE_BALANCE, 0);
+        values.put(COLUMN_FINANCE_TOTAL_EXPENSE, 0);
+        return db.insert(TABLE_FINANCE, null, values);
+    }
+
+    public boolean updateUserBalance(int userId, double newBalance) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_FINANCE_BALANCE, newBalance);
+        int rowsAffected = db.update(TABLE_FINANCE, values,
+                COLUMN_FINANCE_USER_ID + " = ?", new String[]{String.valueOf(userId)});
+        return rowsAffected > 0;
+    }
+
+    public boolean updateUserExpense(int userId, double newExpense) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_FINANCE_TOTAL_EXPENSE, newExpense);
+        int rowsAffected = db.update(TABLE_FINANCE, values,
+                COLUMN_FINANCE_USER_ID + " = ?", new String[]{String.valueOf(userId)});
+        return rowsAffected > 0;
+    }
+
+    public double getUserBalance(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT " + COLUMN_FINANCE_BALANCE + " FROM " + TABLE_FINANCE +
+                " WHERE " + COLUMN_FINANCE_USER_ID + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
+        double balance = 0;
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                balance = cursor.getDouble(0);
+            }
+            cursor.close();
+        }
+        return balance;
+    }
+
+    // T, thêm phương thức mới
+    public Cursor getCategoriesByUserId(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT " + COLUMN_CATEGORY_ID + ", " + COLUMN_CATEGORY_NAME +
+                " FROM " + TABLE_CATEGORY +
+                " WHERE " + COLUMN_CATEGORY_USER_ID + " = ? ORDER BY " + COLUMN_CATEGORY_NAME;
+        return db.rawQuery(query, new String[]{String.valueOf(userId)});
+    }
+
+    public double getUserTotalExpense(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT " + COLUMN_FINANCE_TOTAL_EXPENSE + " FROM " + TABLE_FINANCE +
+                " WHERE " + COLUMN_FINANCE_USER_ID + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
+        if (cursor.moveToFirst()) {
+            return cursor.getDouble(0);
+        }
+        return 0;
+    }
+
+
+    public boolean hasFinanceRecord(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT COUNT(*) FROM " + TABLE_FINANCE +
+                " WHERE " + COLUMN_FINANCE_USER_ID + " = ?";
+
+        try (Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)})) {
+            if (cursor.moveToFirst()) {
+                return cursor.getInt(0) > 0;
+            }
+        }
+        return false;
+    }
+
+    // Thêm phương thức này vào DatabaseHelper.java
+    public boolean checkEmailExists(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_USER + " WHERE " + COLUMN_USER_EMAIL + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{email});
+        boolean exists = cursor.getCount() > 0;
+        cursor.close();
+        return exists;
+    }
+
+    // Phương thức cập nhật mật khẩu mới
+    public boolean updatePassword(String email, String newPassword) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_USER_PASSWORD, newPassword);
+
+        int rowsAffected = db.update(TABLE_USER, values,
+                COLUMN_USER_EMAIL + " = ?", new String[]{email});
+
+        return rowsAffected > 0;
+    }
+
+    // Thêm
+    public boolean updateUserProfile(int userId, ContentValues values) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int rowsAffected = db.update(
+                TABLE_USER,
+                values,
+                COLUMN_USER_ID + " = ?",
+                new String[]{String.valueOf(userId)}
+        );
+        return rowsAffected > 0;
+    }
+
+
+
+    //xóa toàn bộ dữ liệu ng dùng
+    public boolean deleteAllUserData(int userId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        try {
+            db.beginTransaction();
+
+            // Xóa tất cả dữ liệu liên quan đến user
+            db.delete(TABLE_RECURRING_EXPENSE, COLUMN_RECURRING_USER_ID + " = ?", new String[]{String.valueOf(userId)});
+            db.delete(TABLE_NOTIFICATION, COLUMN_NOTIFICATION_USER_ID + " = ?", new String[]{String.valueOf(userId)});
+            db.delete(TABLE_BUDGET, COLUMN_BUDGET_USER_ID + " = ?", new String[]{String.valueOf(userId)});
+            db.delete(TABLE_GOAL, COLUMN_GOAL_USER_ID + " = ?", new String[]{String.valueOf(userId)});
+            db.delete(TABLE_EXPENSE, COLUMN_EXPENSE_USER_ID + " = ?", new String[]{String.valueOf(userId)});
+            db.delete(TABLE_CATEGORY, COLUMN_CATEGORY_USER_ID + " = ?", new String[]{String.valueOf(userId)});
+            db.delete(TABLE_INCOME, COLUMN_INCOME_USER_ID + " = ?", new String[]{String.valueOf(userId)});
+            db.delete(TABLE_FINANCE, COLUMN_FINANCE_USER_ID + " = ?", new String[]{String.valueOf(userId)});
+            db.delete(TABLE_USER, COLUMN_USER_ID + " = ?", new String[]{String.valueOf(userId)});
+
+            db.setTransactionSuccessful();
+            return true;
+        } catch (Exception e) {
+            return false;
+        } finally {
+            db.endTransaction();
+            db.close();
+        }
+    }
+
+    // Thêm phương thức quản lý thời gian thực cho biểu đồ
+    public double[] getWeeklyExpensesRealTime(int userId) {
+        double[] weeklyExpenses = new double[4]; // Tuần gần nhất đến 4 tuần trước
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "SELECT strftime('%W', " + COLUMN_EXPENSE_DATE + ") AS week, " +
+                "SUM(" + COLUMN_EXPENSE_AMOUNT + ") as total " +
+                "FROM " + TABLE_EXPENSE + " " +
+                "WHERE " + COLUMN_EXPENSE_USER_ID + " = ? " +
+                "GROUP BY week " +
+                "ORDER BY week DESC " +
+                "LIMIT 4";
+
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
+
+        int index = 3; // Hiển thị theo thứ tự: Tuần cũ -> mới
+        if (cursor.moveToFirst()) {
+            do {
+                double sum = cursor.getDouble(1);
+                if (index >= 0) {
+                    weeklyExpenses[index] = sum;
+                    index--;
+                }
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return weeklyExpenses;
+    }
+//Thêm phương thức theo dõi biểu đồ theo tháng
+    public float[] getMonthlyExpenses(int userId) {
+        float[] monthlyExpenses = new float[12];
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT strftime('%m', " + COLUMN_EXPENSE_DATE + ") AS month, " +
+                "SUM(" + COLUMN_EXPENSE_AMOUNT + ") as total " +
+                "FROM " + TABLE_EXPENSE + " " +
+                "WHERE " + COLUMN_EXPENSE_USER_ID + " = ? " +
+                "AND strftime('%Y', " + COLUMN_EXPENSE_DATE + ") = strftime('%Y', 'now') " +
+                "GROUP BY month " +
+                "ORDER BY month ASC";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
+        if (cursor.moveToFirst()) {
+            do {
+                int month = Integer.parseInt(cursor.getString(0)) - 1;
+                float total = cursor.getFloat(1);
+                if (month >= 0 && month < 12) {
+                    monthlyExpenses[month] = total;
+                }
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return monthlyExpenses;
+    }
+//chức năng tính và trả về tổng số tiền thu nhập của một người dùng cụ thể dựa trên userId
+    public double getUserTotalIncome(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT SUM(" + COLUMN_INCOME_AMOUNT + ") FROM " + TABLE_INCOME +
+                " WHERE " + COLUMN_INCOME_USER_ID + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
+        double totalIncome = 0;
+        if (cursor.moveToFirst()) {
+            totalIncome = cursor.getDouble(0);
+        }
+        cursor.close();
+        db.close();
+        return totalIncome;
+    }
+    public Cursor getRecurringExpensesByUserId(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_RECURRING_EXPENSE +
+                " WHERE " + COLUMN_RECURRING_USER_ID + " = ?";
+        return db.rawQuery(query, new String[]{String.valueOf(userId)});
+    }
+    public boolean deleteRecurringExpense(int expenseId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int rows = db.delete(TABLE_RECURRING_EXPENSE, COLUMN_RECURRING_ID + " = ?", new String[]{String.valueOf(expenseId)});
+        return rows > 0;
+    }
+    public long addRecurringExpense(RecurringExpense expense) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_RECURRING_USER_ID, expense.getUserId());
+        values.put(COLUMN_RECURRING_CATEGORY_ID, expense.getCategoryId());
+        values.put(COLUMN_RECURRING_AMOUNT, expense.getAmount());
+        values.put(COLUMN_RECURRING_FREQUENCY, expense.getFrequency());
+        values.put(COLUMN_RECURRING_START, expense.getStartDate());
+        values.put(COLUMN_RECURRING_END, expense.getEndDate());
+        values.put(COLUMN_RECURRING_DESCRIPTION, expense.getDescription());
+        return db.insert(TABLE_RECURRING_EXPENSE, null, values);
+    }
+    // Thêm phương thức close()
+    @Override
+    public void close() {
+        super.close();
+    }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_RECURRING_EXPENSE);
@@ -201,6 +507,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_INCOME);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ROLE);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_FINANCE);
         onCreate(db);
     }
 }

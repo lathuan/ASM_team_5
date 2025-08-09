@@ -224,6 +224,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Insert role default
         db.execSQL("INSERT INTO " + TABLE_ROLE + " (" + COLUMN_ROLE_ID + ", " + COLUMN_ROLE_NAME + ") VALUES (1, 'Học sinh')");
         db.execSQL("INSERT INTO " + TABLE_ROLE + " (" + COLUMN_ROLE_ID + ", " + COLUMN_ROLE_NAME + ") VALUES (2, 'Admin')");
+
+
+
     }
 
     public Cursor getAllUsers() {
@@ -465,8 +468,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return totalIncome;
     }
-
-
+    public Cursor getRecurringExpensesByUserId(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_RECURRING_EXPENSE +
+                " WHERE " + COLUMN_RECURRING_USER_ID + " = ?";
+        return db.rawQuery(query, new String[]{String.valueOf(userId)});
+    }
+    public boolean deleteRecurringExpense(int expenseId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int rows = db.delete(TABLE_RECURRING_EXPENSE, COLUMN_RECURRING_ID + " = ?", new String[]{String.valueOf(expenseId)});
+        return rows > 0;
+    }
+    public long addRecurringExpense(RecurringExpense expense) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_RECURRING_USER_ID, expense.getUserId());
+        values.put(COLUMN_RECURRING_CATEGORY_ID, expense.getCategoryId());
+        values.put(COLUMN_RECURRING_AMOUNT, expense.getAmount());
+        values.put(COLUMN_RECURRING_FREQUENCY, expense.getFrequency());
+        values.put(COLUMN_RECURRING_START, expense.getStartDate());
+        values.put(COLUMN_RECURRING_END, expense.getEndDate());
+        values.put(COLUMN_RECURRING_DESCRIPTION, expense.getDescription());
+        return db.insert(TABLE_RECURRING_EXPENSE, null, values);
+    }
     // Thêm phương thức close()
     @Override
     public void close() {

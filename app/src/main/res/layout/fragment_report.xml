@@ -8,7 +8,7 @@
     android:background="#F5F7FB">
 <!--    tools:context=".fragments.ReportFragment"-->
 
-    <!-- App Bar với toolbar và bộ lọc -->
+    <!-- App Bar với các tùy chọn lọc -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
             android:orientation="horizontal"
             android:background="#F5F7FB">
 
-            <!-- Bộ lọc thời gian -->
+            <!-- Lọc theo thời gian -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnTimeFilter"
                 style="@style/Widget.Material3.Button.OutlinedButton"
@@ -42,7 +42,7 @@
                 app:iconTint="#1A237E"
                 app:strokeColor="#1A237E"/>
 
-            <!-- Bộ lọc danh mục -->
+            <!-- Lọc theo danh mục -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCategoryFilter"
                 style="@style/Widget.Material3.Button.OutlinedButton"
@@ -57,7 +57,7 @@
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Nội dung chính -->
+    <!-- Nội dung chính có thể cuộn -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -76,8 +76,7 @@
                 android:orientation="horizontal"
                 android:layout_marginBottom="16dp">
 
-                <!-- Thẻ Tổng thu -->
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -109,10 +108,9 @@
                             android:textStyle="bold"
                             android:layout_marginTop="4dp"/>
                     </LinearLayout>
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
-                <!-- Thẻ Tổng chi -->
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -145,10 +143,9 @@
                             android:textStyle="bold"
                             android:layout_marginTop="4dp"/>
                     </LinearLayout>
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
-                <!-- Thẻ Tiết kiệm -->
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -180,11 +177,11 @@
                             android:textStyle="bold"
                             android:layout_marginTop="4dp"/>
                     </LinearLayout>
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
             <!-- Biểu đồ phân bổ chi tiêu -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 app:cardCornerRadius="16dp"
@@ -204,19 +201,16 @@
                         android:textStyle="bold"
                         android:layout_margin="16dp"/>
 
-                    <!-- Placeholder cho biểu đồ -->
-                    <View
-                        android:id="@+id/chartPlaceholder"
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/pieChart"
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:background="@android:color/darker_gray"
-                        android:layout_margin="16dp"/>
+                        android:layout_height="match_parent"
+                        android:layout_margin="8dp"/>
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Bảng dữ liệu chi tiết -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="16dp"
@@ -226,7 +220,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="16dp"
+                    android:layout_marginBottom="100dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -272,111 +267,28 @@
                             android:textStyle="bold"/>
                     </TableRow>
 
-                    <!-- Dữ liệu mẫu (sẽ thay bằng RecyclerView sau) -->
-                    <!-- Giao dịch 1 -->
-                    <TableRow
+                    <!-- Dữ liệu bảng sẽ được thêm động -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerViewTransactions"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingVertical="12dp"
-                        android:background="?android:attr/selectableItemBackground">
+                        android:layout_marginTop="8dp"
+                        android:scrollbars="vertical"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="2"
-                            android:text="Ăn uống"
-                            android:paddingStart="16dp"/>
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1.5"
-                            android:text="150.000 ₫"
-                            android:textColor="#F44336"
-                            android:textAlignment="textEnd"/>
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="15/07"
-                            android:textAlignment="textEnd"
-                            android:paddingEnd="16dp"/>
-                    </TableRow>
-
-                    <!-- Giao dịch 2 -->
-                    <TableRow
+                    <!-- Nút xuất báo cáo -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnExportReport"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingVertical="12dp"
-                        android:background="#F5F5F5">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="2"
-                            android:text="Lương tháng"
-                            android:paddingStart="16dp"/>
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1.5"
-                            android:text="2.000.000 ₫"
-                            android:textColor="#4CAF50"
-                            android:textAlignment="textEnd"/>
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="05/07"
-                            android:textAlignment="textEnd"
-                            android:paddingEnd="16dp"/>
-                    </TableRow>
-
-                    <!-- Giao dịch 3 -->
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingVertical="12dp"
-                        android:background="?android:attr/selectableItemBackground">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="2"
-                            android:text="Mua sách"
-                            android:paddingStart="16dp"/>
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1.5"
-                            android:text="250.000 ₫"
-                            android:textColor="#F44336"
-                            android:textAlignment="textEnd"/>
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="10/07"
-                            android:textAlignment="textEnd"
-                            android:paddingEnd="16dp"/>
-                    </TableRow>
-
-                    <!-- Nút xem thêm -->
-                    <Button
-                        android:id="@+id/btnViewMore"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Xem thêm giao dịch"
                         android:layout_marginTop="16dp"
-                        android:background="@null"
-                        android:textColor="#1A237E"/>
+                        android:text="Xuất báo cáo"
+                        app:icon="@drawable/export"
+                        app:iconTint="#1A237E"
+                        app:strokeColor="#1A237E"/>
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

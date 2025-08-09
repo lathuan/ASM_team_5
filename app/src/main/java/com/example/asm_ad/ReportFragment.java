@@ -1,6 +1,9 @@
 package com.example.asm_ad;
 
-import android.content.Intent;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -8,148 +11,415 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.appbar.MaterialToolbar;
+import com.example.asm_ad.DatabaseHelper;
+import com.example.asm_ad.R;
+import com.example.asm_ad.adapter.TransactionAdapter;
+import com.example.asm_ad.model.Transaction;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 public class ReportFragment extends Fragment {
 
-        private MaterialButton btnTimeFilter;
-        private MaterialButton btnCategoryFilter;
+    private MaterialButton btnTimeFilter;
+    private MaterialButton btnCategoryFilter;
+    private TextView tvTotalIncome;
+    private TextView tvTotalExpense;
+    private TextView tvTotalSavings;
+    private RecyclerView recyclerViewTransactions;
+    private TransactionAdapter transactionAdapter;
 
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.fragment_report, container, false);
+    private DatabaseHelper dbHelper;
+    private int userId;
+    private String currentStartDate = "";
+    private String currentEndDate = "";
+    private String selectedCategory = "Tất cả danh mục";
 
-            // Thiết lập toolbar
-            MaterialToolbar toolbar = view.findViewById(R.id.toolbar);
-            ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
-            setHasOptionsMenu(true);
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
-            // Khởi tạo view
-            btnTimeFilter = view.findViewById(R.id.btnTimeFilter);
-            btnCategoryFilter = view.findViewById(R.id.btnCategoryFilter);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_report, container, false);
 
-            // Thiết lập sự kiện
-            setupEventListeners();
+        // Lấy userId từ SharedPreferences
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        userId = sharedPreferences.getInt("userId", -1);
 
-            return view;
+        dbHelper = new DatabaseHelper(requireContext());
+
+        // Khởi tạo view
+        initViews(view);
+
+        // Thiết lập khoảng thời gian mặc định (tháng này)
+        setupDefaultDateRange();
+
+        // Tải dữ liệu báo cáo
+        loadReportData();
+
+        return view;
+    }
+
+
+    private void initViews(View view) {
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
+        if (getActivity() != null) {
+            ((androidx.appcompat.app.AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         }
 
-        @Override
-        public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-            inflater.inflate(R.menu.report_menu, menu);
-            super.onCreateOptionsMenu(menu, inflater);
-        }
+        btnTimeFilter = view.findViewById(R.id.btnTimeFilter);
+        btnCategoryFilter = view.findViewById(R.id.btnCategoryFilter);
+        tvTotalIncome = view.findViewById(R.id.tvTotalIncome);
+        tvTotalExpense = view.findViewById(R.id.tvTotalExpense);
+        tvTotalSavings = view.findViewById(R.id.tvTotalSavings);
+        recyclerViewTransactions = view.findViewById(R.id.recyclerViewTransactions);
 
-        @Override
-        public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-            int id = item.getItemId();
+        // Thiết lập RecyclerView
+        recyclerViewTransactions.setLayoutManager(new LinearLayoutManager(getContext()));
+        transactionAdapter = new TransactionAdapter(new ArrayList<>());
+        recyclerViewTransactions.setAdapter(transactionAdapter);
 
-            if (id == R.id.action_export) {
-                exportReport();
-                return true;
-            } else if (id == R.id.action_share) {
-                shareReport();
-                return true;
-            } else if (id == R.id.action_settings) {
-                openReportSettings();
-                return true;
-            }
+        // Thiết lập sự kiện
+        setupEventListeners();
+    }
 
-            return super.onOptionsItemSelected(item);
-        }
+    private void setupDefaultDateRange() {
+        // Mặc định: tháng hiện tại
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
 
-        private void setupEventListeners() {
-            // Sự kiện lọc thời gian
-            btnTimeFilter.setOnClickListener(v -> showTimeFilterDialog());
+        // Định dạng: yyyy-MM
+        currentStartDate = String.format(Locale.getDefault(), "%04d-%02d-01", year, month);
 
-            // Sự kiện lọc danh mục
-            btnCategoryFilter.setOnClickListener(v -> showCategoryFilterDialog());
+        // Ngày cuối cùng của tháng
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        currentEndDate = String.format(Locale.getDefault(), "%04d-%02d-%02d", year, month, day);
+    }
 
-            // Sự kiện xem thêm giao dịch
-//            view.findViewById(R.id.btnViewMore).setOnClickListener(v -> {
-//                // Chuyển đến màn hình xem tất cả giao dịch
-//                Navigation.findNavController(v).navigate(R.id.action_to_transactions);
-//            });
-        }
+    private void setupEventListeners() {
+        // Sự kiện lọc thời gian
+        btnTimeFilter.setOnClickListener(v -> showTimeFilterDialog());
 
-        private void showTimeFilterDialog() {
-            String[] timeOptions = {"Hôm nay", "Tuần này", "Tháng này", "Quý này", "Năm nay", "Tùy chỉnh"};
+        // Sự kiện lọc danh mục
+        btnCategoryFilter.setOnClickListener(v -> showCategoryFilterDialog());
+    }
 
-            new MaterialAlertDialogBuilder(requireContext())
-                    .setTitle("Chọn khoảng thời gian")
-                    .setItems(timeOptions, (dialog, which) -> {
-                        btnTimeFilter.setText(timeOptions[which]);
-                        // Cập nhật dữ liệu theo thời gian đã chọn
-                        loadReportData(which);
-                    })
-                    .show();
-        }
+    private void showTimeFilterDialog() {
+        String[] timeOptions = {"Hôm nay", "Tuần này", "Tháng này", "Quý này", "Năm nay", "Tùy chỉnh"};
 
-        private void showCategoryFilterDialog() {
-            // Giả sử danh sách danh mục từ database
-            String[] categories = {"Tất cả", "Ăn uống", "Di chuyển", "Giải trí", "Học tập", "Lương", "Khác"};
+        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle("Chọn khoảng thời gian")
+                .setItems(timeOptions, (dialog, which) -> {
+                    btnTimeFilter.setText(timeOptions[which]);
+                    updateDateRange(which);
+                    loadReportData();
+                })
+                .show();
+    }
 
-            new MaterialAlertDialogBuilder(requireContext())
-                    .setTitle("Chọn danh mục")
-                    .setItems(categories, (dialog, which) -> {
-                        btnCategoryFilter.setText(categories[which]);
-                        // Cập nhật dữ liệu theo danh mục đã chọn
-                        filterByCategory(categories[which]);
-                    })
-                    .show();
-        }
+    private void updateDateRange(int timeRange) {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
-        private void exportReport() {
-            // Logic xuất báo cáo (PDF, Excel, ...)
-            Toast.makeText(requireContext(), "Xuất báo cáo thành công", Toast.LENGTH_SHORT).show();
+        switch (timeRange) {
+            case 0: // Hôm nay
+                currentStartDate = sdf.format(calendar.getTime());
+                currentEndDate = currentStartDate;
+                break;
 
-            // Mở dialog chọn định dạng
-            new MaterialAlertDialogBuilder(requireContext())
-                    .setTitle("Xuất báo cáo")
-                    .setItems(new String[]{"PDF", "Excel", "Hình ảnh"}, (dialog, which) -> {
-                        String format = "";
-                        switch (which) {
-                            case 0: format = "PDF"; break;
-                            case 1: format = "Excel"; break;
-                            case 2: format = "Hình ảnh"; break;
-                        }
-                        Toast.makeText(requireContext(), "Đang xuất dạng " + format, Toast.LENGTH_SHORT).show();
-                    })
-                    .show();
-        }
+            case 1: // Tuần này
+                calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
+                currentStartDate = sdf.format(calendar.getTime());
+                calendar.add(Calendar.DAY_OF_WEEK, 6);
+                currentEndDate = sdf.format(calendar.getTime());
+                break;
 
-        private void shareReport() {
-            // Logic chia sẻ báo cáo
-            Intent shareIntent = new Intent(Intent.ACTION_SEND);
-            shareIntent.setType("text/plain");
-            shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Báo cáo tài chính");
-            shareIntent.putExtra(Intent.EXTRA_TEXT, "Xem báo cáo tài chính của tôi...");
-            startActivity(Intent.createChooser(shareIntent, "Chia sẻ qua"));
-        }
+            case 2: // Tháng này
+                calendar.set(Calendar.DAY_OF_MONTH, 1);
+                currentStartDate = sdf.format(calendar.getTime());
+                calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+                currentEndDate = sdf.format(calendar.getTime());
+                break;
 
-        private void openReportSettings() {
-            // Mở cài đặt báo cáo
-            Toast.makeText(requireContext(), "Mở cài đặt báo cáo", Toast.LENGTH_SHORT).show();
-        }
+            case 3: // Quý này
+                int currentMonth = calendar.get(Calendar.MONTH);
+                int quarterStartMonth = currentMonth - (currentMonth % 3);
+                calendar.set(Calendar.MONTH, quarterStartMonth);
+                calendar.set(Calendar.DAY_OF_MONTH, 1);
+                currentStartDate = sdf.format(calendar.getTime());
 
-        private void loadReportData(int timeRange) {
-            // Tải dữ liệu từ database theo khoảng thời gian
-            // Cập nhật UI với dữ liệu mới
-        }
+                calendar.add(Calendar.MONTH, 2);
+                calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+                currentEndDate = sdf.format(calendar.getTime());
+                break;
 
-        private void filterByCategory(String category) {
-            // Lọc dữ liệu theo danh mục
-            // Cập nhật UI với dữ liệu đã lọc
+            case 4: // Năm nay
+                calendar.set(Calendar.DAY_OF_YEAR, 1);
+                currentStartDate = sdf.format(calendar.getTime());
+                calendar.set(Calendar.MONTH, 11);
+                calendar.set(Calendar.DAY_OF_MONTH, 31);
+                currentEndDate = sdf.format(calendar.getTime());
+                break;
+
+            case 5: // Tùy chỉnh
+                // TODO: Triển khai chọn ngày tùy chỉnh
+                Toast.makeText(requireContext(), "Chức năng chọn ngày tùy chỉnh đang phát triển", Toast.LENGTH_SHORT).show();
+                break;
         }
     }
+
+    private void showCategoryFilterDialog() {
+        // Lấy danh sách danh mục từ database
+        List<String> categories = getCategoriesFromDatabase();
+
+        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle("Chọn danh mục")
+                .setItems(categories.toArray(new String[0]), (dialog, which) -> {
+                    selectedCategory = categories.get(which);
+                    btnCategoryFilter.setText(selectedCategory);
+                    loadReportData();
+                })
+                .show();
+    }
+
+    private List<String> getCategoriesFromDatabase() {
+        List<String> categories = new ArrayList<>();
+        categories.add("Tất cả danh mục");
+
+        Cursor cursor = dbHelper.getCategoriesByUserId(userId);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                String categoryName = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_CATEGORY_NAME));
+                categories.add(categoryName);
+            }
+            cursor.close();
+        }
+        return categories;
+    }
+
+    private void loadReportData() {
+        // Tải tổng thu nhập
+        double totalIncome = getTotalIncome();
+        tvTotalIncome.setText(formatCurrency(totalIncome));
+        tvTotalIncome.setTextColor(ContextCompat.getColor(requireContext(), R.color.green));
+
+        // Tải tổng chi tiêu
+        double totalExpense = getTotalExpense();
+        tvTotalExpense.setText(formatCurrency(totalExpense));
+        tvTotalExpense.setTextColor(ContextCompat.getColor(requireContext(), R.color.red));
+
+        // Tính tiết kiệm (thu - chi)
+        double savings = totalIncome - totalExpense;
+        tvTotalSavings.setText(formatCurrency(savings));
+        tvTotalSavings.setTextColor(ContextCompat.getColor(requireContext(),
+                savings >= 0 ? R.color.blue : R.color.red));
+
+        // Tải giao dịch
+        List<Transaction> transactions = getTransactions();
+        transactionAdapter.updateData(transactions);
+    }
+
+    private double getTotalIncome() {
+        String query = "SELECT SUM(" + DatabaseHelper.COLUMN_INCOME_AMOUNT + ") " +
+                "FROM " + DatabaseHelper.TABLE_INCOME + " " +
+                "WHERE " + DatabaseHelper.COLUMN_INCOME_USER_ID + " = ? " +
+                "AND " + DatabaseHelper.COLUMN_INCOME_DATE + " BETWEEN ? AND ?";
+
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, new String[]{
+                String.valueOf(userId),
+                currentStartDate,
+                currentEndDate
+        });
+
+        double total = 0;
+        if (cursor.moveToFirst()) {
+            total = cursor.getDouble(0);
+        }
+        cursor.close();
+        return total;
+    }
+
+    private double getTotalExpense() {
+        String query = "SELECT SUM(" + DatabaseHelper.COLUMN_EXPENSE_AMOUNT + ") " +
+                "FROM " + DatabaseHelper.TABLE_EXPENSE + " e " +
+                "JOIN " + DatabaseHelper.TABLE_CATEGORY + " c ON e." +
+                DatabaseHelper.COLUMN_EXPENSE_CATEGORY_ID + " = c." +
+                DatabaseHelper.COLUMN_CATEGORY_ID + " " +
+                "WHERE e." + DatabaseHelper.COLUMN_EXPENSE_USER_ID + " = ? " +
+                "AND e." + DatabaseHelper.COLUMN_EXPENSE_DATE + " BETWEEN ? AND ?";
+
+        // Thêm điều kiện lọc danh mục nếu cần
+        if (!selectedCategory.equals("Tất cả danh mục")) {
+            query += " AND c." + DatabaseHelper.COLUMN_CATEGORY_NAME + " = ?";
+        }
+
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String[] params;
+
+        if (!selectedCategory.equals("Tất cả danh mục")) {
+            params = new String[]{
+                    String.valueOf(userId),
+                    currentStartDate,
+                    currentEndDate,
+                    selectedCategory
+            };
+        } else {
+            params = new String[]{
+                    String.valueOf(userId),
+                    currentStartDate,
+                    currentEndDate
+            };
+        }
+
+        Cursor cursor = db.rawQuery(query, params);
+        double total = 0;
+        if (cursor.moveToFirst()) {
+            total = cursor.getDouble(0);
+        }
+        cursor.close();
+        return total;
+    }
+
+    private List<Transaction> getTransactions() {
+        List<Transaction> transactions = new ArrayList<>();
+
+        // Truy vấn thu nhập
+        String incomeQuery = "SELECT " +
+                "i." + DatabaseHelper.COLUMN_INCOME_ID + " AS id, " +
+                "'income' AS type, " +
+                "i." + DatabaseHelper.COLUMN_INCOME_AMOUNT + " AS amount, " +
+                "i." + DatabaseHelper.COLUMN_INCOME_DATE + " AS date, " +
+                "i." + DatabaseHelper.COLUMN_INCOME_SOURCE + " AS description, " +
+                "NULL AS category " +
+                "FROM " + DatabaseHelper.TABLE_INCOME + " i " +
+                "WHERE i." + DatabaseHelper.COLUMN_INCOME_USER_ID + " = ? " +
+                "AND i." + DatabaseHelper.COLUMN_INCOME_DATE + " BETWEEN ? AND ?";
+
+        // Truy vấn chi tiêu
+        String expenseQuery = "SELECT " +
+                "e." + DatabaseHelper.COLUMN_EXPENSE_ID + " AS id, " +
+                "'expense' AS type, " +
+                "e." + DatabaseHelper.COLUMN_EXPENSE_AMOUNT + " AS amount, " +
+                "e." + DatabaseHelper.COLUMN_EXPENSE_DATE + " AS date, " +
+                "e." + DatabaseHelper.COLUMN_EXPENSE_DESCRIPTION + " AS description, " +
+                "c." + DatabaseHelper.COLUMN_CATEGORY_NAME + " AS category " +
+                "FROM " + DatabaseHelper.TABLE_EXPENSE + " e " +
+                "JOIN " + DatabaseHelper.TABLE_CATEGORY + " c ON e." +
+                DatabaseHelper.COLUMN_EXPENSE_CATEGORY_ID + " = c." +
+                DatabaseHelper.COLUMN_CATEGORY_ID + " " +
+                "WHERE e." + DatabaseHelper.COLUMN_EXPENSE_USER_ID + " = ? " +
+                "AND e." + DatabaseHelper.COLUMN_EXPENSE_DATE + " BETWEEN ? AND ?";
+
+        // Thêm điều kiện lọc danh mục cho chi tiêu
+        if (!selectedCategory.equals("Tất cả danh mục")) {
+            expenseQuery += " AND c." + DatabaseHelper.COLUMN_CATEGORY_NAME + " = ?";
+        }
+
+        // Kết hợp cả hai truy vấn
+        String unionQuery = incomeQuery + " UNION ALL " + expenseQuery + " ORDER BY date DESC";
+
+
+
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String[] params;
+
+        if (!selectedCategory.equals("Tất cả danh mục")) {
+            params = new String[]{
+                    String.valueOf(userId), currentStartDate, currentEndDate,
+                    String.valueOf(userId), currentStartDate, currentEndDate, selectedCategory
+            };
+        } else {
+            params = new String[]{
+                    String.valueOf(userId), currentStartDate, currentEndDate,
+                    String.valueOf(userId), currentStartDate, currentEndDate
+            };
+        }
+
+        Cursor cursor = db.rawQuery(unionQuery, params);
+
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                Transaction transaction = new Transaction();
+                transaction.setId(cursor.getInt(cursor.getColumnIndexOrThrow("id")));
+                transaction.setType(cursor.getString(cursor.getColumnIndexOrThrow("type")));
+                transaction.setAmount(cursor.getDouble(cursor.getColumnIndexOrThrow("amount")));
+                transaction.setDate(cursor.getString(cursor.getColumnIndexOrThrow("date")));
+                transaction.setDescription(cursor.getString(cursor.getColumnIndexOrThrow("description")));
+                transaction.setCategory(cursor.getString(cursor.getColumnIndexOrThrow("category")));
+                transactions.add(transaction);
+            }
+            cursor.close();
+        }
+
+        return transactions;
+    }
+
+    private String formatCurrency(double amount) {
+        return String.format(Locale.getDefault(), "%,.0f ₫", amount);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.report_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_export) {
+            exportReport();
+            return true;
+        } else if (id == R.id.action_share) {
+            shareReport();
+            return true;
+        } else if (id == R.id.action_settings) {
+            openReportSettings();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void exportReport() {
+        // TODO: Triển khai xuất báo cáo
+        Toast.makeText(requireContext(), "Xuất báo cáo thành công", Toast.LENGTH_SHORT).show();
+    }
+
+    private void shareReport() {
+        // TODO: Triển khai chia sẻ báo cáo
+        Toast.makeText(requireContext(), "Chia sẻ báo cáo", Toast.LENGTH_SHORT).show();
+    }
+
+    private void openReportSettings() {
+        // TODO: Triển khai cài đặt báo cáo
+        Toast.makeText(requireContext(), "Mở cài đặt báo cáo", Toast.LENGTH_SHORT).show();
+    }
+}

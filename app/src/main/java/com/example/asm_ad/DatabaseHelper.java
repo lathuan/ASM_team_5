@@ -224,9 +224,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Insert role default
         db.execSQL("INSERT INTO " + TABLE_ROLE + " (" + COLUMN_ROLE_ID + ", " + COLUMN_ROLE_NAME + ") VALUES (1, 'Học sinh')");
         db.execSQL("INSERT INTO " + TABLE_ROLE + " (" + COLUMN_ROLE_ID + ", " + COLUMN_ROLE_NAME + ") VALUES (2, 'Admin')");
-
-
-
     }
 
     public Cursor getAllUsers() {
@@ -468,6 +465,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return totalIncome;
     }
+
 
     // Thêm phương thức close()
     @Override

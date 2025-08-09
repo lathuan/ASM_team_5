@@ -1,4 +1,4 @@
-package com.example.asm_ad;
+package com.example.asm_ad.model;
 
 public class UserModel {
     private int id;

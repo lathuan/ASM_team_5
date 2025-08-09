@@ -11,4 +11,8 @@
     <color name="light_gray_background">#FAFAFA</color>
     <color name="purple_500">#6750A4</color>
     <color name="purple_700">#4F378B</color>
+    <color name="divider_color">#ECEFF1</color>
+    <color name="green">#4CAF50</color>
+    <color name="red">#F44336</color>
+    <color name="blue">#2196F3</color>
 </resources>

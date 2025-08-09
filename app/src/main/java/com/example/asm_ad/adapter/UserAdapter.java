@@ -1,4 +1,4 @@
-package com.example.asm_ad;
+package com.example.asm_ad.adapter;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -14,6 +14,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.asm_ad.DatabaseHelper;
+import com.example.asm_ad.R;
+import com.example.asm_ad.model.UserModel;
 
 import java.util.List;
 

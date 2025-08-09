@@ -11,6 +11,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.asm_ad.adapter.UserAdapter;
+import com.example.asm_ad.model.UserModel;
+
 import java.util.ArrayList;
 
 public class AdminActivity extends AppCompatActivity implements UserAdapter.OnUserChangeListener {

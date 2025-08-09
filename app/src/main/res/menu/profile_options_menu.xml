@@ -2,10 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menu_delete_account"
-        android:title="Xóa tài khoản"
+        android:title="Delete Account"
         android:icon="@drawable/delete"/>
     <item
         android:id="@+id/menu_logout"
-        android:title="Đăng xuất"
+        android:title="Log Out"
         android:icon="@drawable/logout"/>
 </menu>

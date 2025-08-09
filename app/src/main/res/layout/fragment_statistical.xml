@@ -14,13 +14,13 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Thống kê tài chính"
+            android:text="Financial Statistics"
             android:textSize="24sp"
             android:textColor="#1A237E"
             android:textStyle="bold"
             android:layout_marginBottom="16dp"/>
 
-        <!-- Số liệu chính -->
+        <!-- Main Figures -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
                     android:id="@+id/tv_balance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Số dư: 0 VND"
+                    android:text="Balance: 0 VND"
                     android:textSize="18sp"
                     android:textColor="#000000"
                     android:layout_marginBottom="8dp"/>
@@ -47,17 +47,17 @@
                     android:id="@+id/tv_total_expense"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Tổng chi tiêu: 0 VND"
+                    android:text="Total Expenses: 0 VND"
                     android:textSize="18sp"
                     android:textColor="#D32F2F"/>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Biểu đồ chi tiêu -->
+        <!-- Weekly Expenses Chart -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Chi tiêu hàng tuần"
+            android:text="Weekly Expenses"
             android:textSize="18sp"
             android:textColor="#333333"
             android:textStyle="bold"

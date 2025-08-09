@@ -8,22 +8,25 @@
     android:orientation="vertical"
     android:padding="16dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:contentDescription="Ảnh đại diện người dùng"
+        android:contentDescription="User profile picture"
         android:paddingTop="8dp"
         android:src="@drawable/avatar" />
+
     <TextView
         android:id="@+id/textViewUserName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
-        android:text="Tên Người Dùng"
+        android:text="User Name"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="@android:color/white"
         android:textStyle="bold" />
+
     <TextView
         android:id="@+id/textViewUserEmail"
         android:layout_width="wrap_content"

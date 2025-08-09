@@ -38,7 +38,7 @@
                 android:id="@+id/tv_expense_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Mô tả"
+                android:text="Description"
                 android:textColor="#333333"
                 android:textSize="14sp"/>
 
@@ -46,7 +46,7 @@
                 android:id="@+id/tv_expense_timestamp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Thời gian"
+                android:text="Time"
                 android:textColor="#757575"
                 android:textSize="12sp"/>
         </LinearLayout>

@@ -14,7 +14,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Tổng quan chi tiêu"
+            android:text="Spending Overview"
             android:textColor="#1A237E"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -45,7 +45,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Hôm nay"
+                        android:text="Today"
                         android:textColor="#E0E0E0"
                         android:textSize="14sp"/>
 
@@ -80,7 +80,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tháng này"
+                        android:text="This Month"
                         android:textColor="#E0E0E0"
                         android:textSize="14sp"/>
 
@@ -100,7 +100,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Phân bổ chi tiêu theo danh mục"
+            android:text="Spending Allocation by Category"
             android:textColor="#333333"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -113,7 +113,7 @@
             app:cardElevation="4dp"
             android:layout_marginBottom="16dp">
 
-            <!-- Placeholder cho biểu đồ -->
+            <!-- Placeholder for chart -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -122,7 +122,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Biểu đồ phân bổ chi tiêu"
+                    android:text="Spending Allocation Chart"
                     android:textSize="16sp"/>
             </LinearLayout>
         </androidx.cardview.widget.CardView>

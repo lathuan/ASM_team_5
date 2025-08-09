@@ -7,43 +7,42 @@
         <item
             android:id="@+id/nav_home_drawer"
             android:icon="@drawable/home"
-            android:title="Trang Chủ" />
+            android:title="Home" />
         <item
             android:id="@+id/nav_expense_tracking"
             android:icon="@drawable/expense"
-            android:title="Theo Dõi Chi Tiêu" />
+            android:title="Expense Tracking" />
         <item
             android:id="@+id/nav_income_tracking"
             android:icon="@drawable/tracking"
-            android:title="Theo Dõi Thu Nhập" />
+            android:title="Income Tracking" />
         <item
             android:id="@+id/nav_savings_goals"
             android:icon="@drawable/darts"
-            android:title="Mục Tiêu Tiết Kiệm" />
+            android:title="Savings Goals" />
         <item
             android:id="@+id/nav_statistical"
             android:icon="@drawable/statistical"
-            android:title="Thống Kê" />
+            android:title="Statistics" />
         <item
             android:id="@+id/nav_report"
             android:icon="@drawable/report"
-            android:title="Báo Cáo" />
+            android:title="Report" />
         <item
             android:id="@+id/nav_settings_drawer"
             android:icon="@drawable/recurringpayment"
-            android:title="Chi tiêu Định Kỳ" />
+            android:title="Recurring Expenses" />
         <item
             android:id="@+id/nav_settings_oveview"
             android:icon="@drawable/overview"
-            android:title="Tổng quan chi tiêu" />
+            android:title="Expense Overview" />
         <item
             android:id="@+id/nav_search_drawer"
             android:icon="@drawable/search"
-            android:title="Tìm Kiếm" />
+            android:title="Search" />
         <item
             android:id="@+id/nav_notifications_drawer"
             android:icon="@drawable/notification"
-            android:title="Thông Báo" />
-
+            android:title="Notifications" />
     </group>
 </menu>

@@ -4,19 +4,19 @@
 
     <item
         android:id="@+id/action_export"
-        android:title="Xuất file"
+        android:title="Export File"
         android:icon="@drawable/export"
         app:showAsAction="never"/>
 
     <item
         android:id="@+id/action_share"
-        android:title="Chia sẻ"
+        android:title="Share"
         android:icon="@drawable/share"
         app:showAsAction="never"/>
 
     <item
         android:id="@+id/action_settings"
-        android:title="Cài đặt báo cáo"
+        android:title="Report Settings"
         android:icon="@drawable/settings"
         app:showAsAction="never"/>
 </menu>

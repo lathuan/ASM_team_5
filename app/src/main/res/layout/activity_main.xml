@@ -16,7 +16,7 @@
         android:background="#F5F7FB"
         tools:context=".MainActivity">
 
-        <!-- AppBar với Toolbar và các icon -->
+        <!-- AppBar with Toolbar and icons -->
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1" />
 
-                    <!-- Icon Search  -->
+                    <!-- Search Icon -->
                     <ImageView
                         android:id="@+id/icon_search"
                         android:layout_width="48dp"
@@ -50,10 +50,10 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:background="?attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="Tìm kiếm"
+                        android:contentDescription="Search"
                         android:src="@drawable/search" />
 
-                    <!-- Icon Notifications (CHỈ CÒN 1) -->
+                    <!-- Notifications Icon -->
                     <ImageView
                         android:id="@+id/icon_notifications"
                         android:layout_width="48dp"
@@ -63,13 +63,13 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:background="?attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="Thông báo"
+                        android:contentDescription="Notifications"
                         android:src="@drawable/notification" />
                 </LinearLayout>
             </com.google.android.material.appbar.MaterialToolbar>
         </com.google.android.material.appbar.AppBarLayout>
 
-        <!-- CHỈ CÒN DUY NHẤT FrameLayout cho Fragment -->
+        <!-- FrameLayout for Fragment -->
         <FrameLayout
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
@@ -103,14 +103,14 @@
                 <ImageView
                     android:layout_width="19dp"
                     android:layout_height="21dp"
-                    android:contentDescription="Biểu tượng trang chủ"
+                    android:contentDescription="Home Icon"
                     android:src="@drawable/home"
                     app:tint="#808080" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Trang Chủ"
+                    android:text="Home"
                     android:textColor="#808080"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -135,13 +135,13 @@
                 <ImageView
                     android:layout_width="19dp"
                     android:layout_height="19dp"
-                    android:contentDescription="Biểu tượng hồ sơ"
+                    android:contentDescription="Profile Icon"
                     android:src="@drawable/avatar" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Hồ Sơ"
+                    android:text="Profile"
                     android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>
@@ -153,7 +153,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:clickable="true"
-            android:contentDescription="Thêm mới"
+            android:contentDescription="Add New"
             android:focusable="true"
             android:src="@drawable/add"
             app:backgroundTint="#FFC107"

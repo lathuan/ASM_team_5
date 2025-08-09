@@ -27,7 +27,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Thêm giao dịch mới"
+                android:text="Add New Transaction"
                 android:textSize="22sp"
                 android:textStyle="bold"
                 android:textColor="@color/purple_500"
@@ -60,7 +60,7 @@
                         android:id="@+id/et_amount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Số tiền"
+                        android:hint="Amount"
                         android:inputType="numberDecimal"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -76,7 +76,7 @@
                         android:id="@+id/et_description"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Mô tả"/>
+                        android:hint="Description"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Date picker -->
@@ -91,7 +91,7 @@
                         android:id="@+id/et_date"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Ngày/Tháng/Năm"
+                        android:hint="Day/Month/Year"
                         android:focusable="false"
                         android:clickable="true"/>
                 </com.google.android.material.textfield.TextInputLayout>
@@ -101,7 +101,6 @@
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     app:startIconTint="@color/purple_500">
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -120,7 +119,7 @@
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Hủy"
+                android:text="Cancel"
                 android:textColor="@color/purple_500"
                 app:strokeColor="@color/purple_500"
                 app:strokeWidth="1dp"
@@ -131,7 +130,7 @@
                 style="@style/Widget.Material3.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Lưu lại"
+                android:text="Save"
                 app:backgroundTint="@color/purple_500"/>
         </LinearLayout>
     </LinearLayout>

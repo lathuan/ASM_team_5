@@ -13,7 +13,7 @@
             android:id="@+id/edtDialogFullName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Họ tên" />
+            android:hint="Full Name" />
 
         <EditText
             android:id="@+id/edtDialogEmail"
@@ -27,14 +27,14 @@
             android:id="@+id/edtDialogPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Số điện thoại"
+            android:hint="Phone Number"
             android:inputType="phone"
             android:layout_marginTop="8dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Vai trò"
+            android:text="Role"
             android:layout_marginTop="8dp"/>
 
         <Spinner

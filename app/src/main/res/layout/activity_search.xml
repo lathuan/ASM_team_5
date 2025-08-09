@@ -9,7 +9,7 @@
         android:id="@+id/search_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:queryHint="Tìm kiếm giao dịch..." />
+        android:queryHint="Search Trade " />
 
     <ListView
         android:id="@+id/list_view"

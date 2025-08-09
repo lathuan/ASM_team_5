@@ -7,12 +7,12 @@
     android:padding="16dp"
     android:background="@drawable/bg_gradient">
 
-    <!-- Tiêu đề với background bo góc và shadow -->
+    <!-- Title with rounded background and shadow -->
     <TextView
         android:id="@+id/tvAdminTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Quản lý tài khoản người dùng"
+        android:text="User Account Management"
         android:textSize="22sp"
         android:textStyle="bold"
         android:gravity="center"
@@ -23,7 +23,7 @@
         android:layout_marginBottom="16dp"
         android:layout_marginTop="50dp"/>
 
-    <!-- RecyclerView với divider và shadow -->
+    <!-- RecyclerView with divider and shadow -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvUserList"
         android:layout_width="match_parent"
@@ -36,12 +36,12 @@
         android:clipToPadding="false"
         app:divider="@color/divider_color"/>
 
-    <!-- Nút thêm người dùng -->
+    <!-- Add user button -->
     <Button
         android:id="@+id/btnAddUser"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:text="Thêm người dùng"
+        android:text="Add User"
         android:textSize="16sp"
         android:textColor="@android:color/white"
         android:backgroundTint="#FF4CAF50"
@@ -51,12 +51,12 @@
         android:layout_marginTop="8dp"
         android:fontFamily="sans-serif-medium"/>
 
-    <!-- Nút đăng xuất -->
+    <!-- Logout button -->
     <Button
         android:id="@+id/btnBackToLogin"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:text="Đăng xuất"
+        android:text="Logout"
         android:textSize="16sp"
         android:textColor="@android:color/white"
         android:backgroundTint="#FFE91E63"
